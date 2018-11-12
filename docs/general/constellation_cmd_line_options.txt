@@ -1,0 +1,27 @@
+(If a configuration file is specified, any command line options will take precedence.)
+           --url[=URL]                 URL for this node (what's advertised to other nodes, e.g. https://constellation.mydomain.com/)
+           --port[=NUM]                Port to listen on for the public API
+           --workdir[=DIR]             Working directory to use (relative paths specified for other options are relative to the working directory)
+           --socket[=FILE]             Path to IPC socket file to create for private API access
+           --othernodes[=URL...]       Comma-separated list of other node URLs to connect to on startup (this list may be incomplete)
+           --publickeys[=FILE...]      Comma-separated list of paths to public keys to advertise
+           --privatekeys[=FILE...]     Comma-separated list of paths to corresponding private keys (these must be given in the same order as --publickeys)
+           --alwayssendto[=FILE...]    Comma-separated list of paths to public keys that are always included as recipients (these must be advertised somewhere)
+           --passwords[=FILE]          A file containing the passwords for the specified --privatekeys, one per line, in the same order (if one key is not locked, add an empty line)
+           --storage[=STRING]          Storage string specifying a storage engine and/or storage path
+           --ipwhitelist[=IP...]       Comma-separated list of IPv4 and IPv6 addresses that may connect to this node's public API
+           --tls[=STRING]              TLS status (strict, off)
+           --tlsservercert[=FILE]      TLS certificate file to use for the public API
+           --tlsserverchain[=FILE...]  Comma separated list of TLS chain certificates to use for the public API
+           --tlsserverkey[=FILE]       TLS key to use for the public API
+           --tlsservertrust[=STRING]   TLS server trust mode (whitelist, ca-or-tofu, ca, tofu, insecure-no-validation)
+           --tlsknownclients[=FILE]    TLS server known clients file for the ca-or-tofu, tofu and whitelist trust modes
+           --tlsclientcert[=FILE]      TLS client certificate file to use for connections to other nodes
+           --tlsclientchain[=FILE...]  Comma separated list of TLS chain certificates to use for connections to other nodes
+           --tlsclientkey[=FILE]       TLS key to use for connections to other nodes
+           --tlsclienttrust[=STRING]   TLS client trust mode (whitelist, ca-or-tofu, ca, tofu, insecure-no-validation)
+           --tlsknownservers[=FILE]    TLS client known servers file for the ca-or-tofu, tofu and whitelist trust modes
+  -v[NUM]  --verbosity[=NUM]           Print more detailed information (optionally specify a number or add v's to increase verbosity)
+  -V, -?   --version                   Output current version information, then exit
+           --generatekeys[=NAME...]    Comma-separated list of key pair names to generate, then exit
+)

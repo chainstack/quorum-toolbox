@@ -1,0 +1,22 @@
+engines:
+  # ... CONFIG CONTENT ...
+  pep8:
+    enabled: true
+    # ... CONFIG CONTENT ...
+    checks:
+    # ... LINE LENGTH ...
+      E501:
+        enabled: false
+# ... CONFIG CONTENT ...
+
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        python:
+          python_version: 3
+
+exclude_paths:
+- "test_*.py"
+- "template_dir/"

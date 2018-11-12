@@ -1,0 +1,5 @@
+*.pyc
+.idea
+*.txt.swp
+venv
+__pycache__
