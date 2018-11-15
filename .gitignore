@@ -3,3 +3,4 @@
 *.txt.swp
 venv
 __pycache__
+env

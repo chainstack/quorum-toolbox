@@ -1,14 +1,14 @@
 import json
+import os
 import shutil
 import sys
-import os
-from time import sleep
 from collections import namedtuple
+from time import sleep
 
 import requests
 import sh
-from create_quorum_node import CreateQuorumNode
 
+from quorumtoolbox.create_quorum_node import CreateQuorumNode
 
 deploy_node_params = namedtuple('deploy_node_params', [
     'helm_node_charts',

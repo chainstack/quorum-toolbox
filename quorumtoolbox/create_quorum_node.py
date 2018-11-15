@@ -1,7 +1,8 @@
+import os
 import random
 
-from utils import fs_utils
-from quorum_network import QuorumNetwork
+from quorumtoolbox.quorum_network import QuorumNetwork
+from quorumtoolbox.utils import fs_utils
 
 
 # This class is used to create a single Quorum node- either Initial or New node.
@@ -11,7 +12,7 @@ class CreateQuorumNode:
         other_raft_public_ip = network_params.get('other_raft_public_ip', None)
         other_constellation_public_ip = network_params.get('other_constellation_public_ip', None)
 
-        self.genesis = network_params.get('genesis_content', "")
+        self.genesis = network_params.get('genesis_content', '')
 
         self.constellation_params = {
             'other_nodes': [other_constellation_public_ip] if other_constellation_public_ip is not None else []
@@ -40,7 +41,7 @@ class CreateQuorumNode:
                                 self._networkid,
                                 [self.context],
                                 [self.address],
-                                ["0.0.0.0"],
+                                ['0.0.0.0'],
                                 self.node_state,
                                 genesis_content=self.genesis,
                                 geth_params=self.geth_params,
@@ -54,7 +55,7 @@ class CreateQuorumNode:
 
     @property
     def genesis_content(self):
-        return open(self._genesis_files[0], "r").read()
+        return open(self._genesis_files[0], 'r').read()
 
     @property
     def networkid(self):
@@ -78,4 +79,4 @@ class CreateQuorumNode:
         except FileNotFoundError:
             pass
 
-        fs_utils.copy_dir("template_dir", self.context)
+        fs_utils.copy_dir(os.path.dirname(os.path.abspath(__file__)) + '/template_dir', self.context)

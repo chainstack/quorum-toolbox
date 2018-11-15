@@ -1,7 +1,7 @@
-import raft
-import random
 import json
-from utils.utils import make_param
+
+from quorumtoolbox import raft
+from quorumtoolbox.utils import make_param
 
 # ---------------------- Test: Non defaults
 print("==== START RAFT TEST ====")
@@ -36,7 +36,6 @@ with open(raft_file, "r") as fp:
     if raft_id is not None:
         raise Exception("Error: RAFT_ID for initial  network is not None ({0})."
                         .format(raft_id))
-
 
 raft_launch_params = r.launch_parameters
 
@@ -92,7 +91,6 @@ with open(raft_file, "r") as fp:
         raise Exception("Error: RAFT_ID for initial  network is not None ({0})."
                         .format(raft_id))
 
-
 raft_launch_params = r.launch_parameters
 print("Checking launch parameters")
 
@@ -122,8 +120,3 @@ if build_configuration['network']['peers'] != []:
                     format([], build_configuration['network']['peers']))
 
 print("==== PASS ====")
-
-
-
-
-

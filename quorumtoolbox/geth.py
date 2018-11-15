@@ -1,30 +1,30 @@
 import os
-from utils import bash_utils, templating, enode_utils
-from utils.utils import make_param
+
+from quorumtoolbox.utils import bash_utils, enode_utils, make_param
 
 
 class Geth:
-    blockchain_dir_name = "blockchain"
-    qdata_dir_name = "qdata"
-    dd_dir_name = "dd"
-    keystore_dir_name = "keystore"
-    geth_dir_name = "geth"
-    chaindata_dir_name = "chaindata"
-    logs_dir_name = "logs"
+    blockchain_dir_name = 'blockchain'
+    qdata_dir_name = 'qdata'
+    dd_dir_name = 'dd'
+    keystore_dir_name = 'keystore'
+    geth_dir_name = 'geth'
+    chaindata_dir_name = 'chaindata'
+    logs_dir_name = 'logs'
 
-    nodekey_file_name = "nodekey"
-    socket_file_name = "geth.ipc"
-    log_file_name = "geth.log"
-    passwords_file_name = "passwords.txt"
+    nodekey_file_name = 'nodekey'
+    socket_file_name = 'geth.ipc'
+    log_file_name = 'geth.log'
+    passwords_file_name = 'passwords.txt'
 
     def __init__(self,
                  context,
                  address,
-                 rpcaddr,                  # default rpcaddr is localhost. So, explicitly ask for it.
+                 rpcaddr,  # default rpcaddr is localhost. So, explicitly ask for it.
                  networkid,
-                 port=30303,               # default in Quorum. needed to make enode_id_geth.
-                 rpcport=8545,             # default in Quorum.
-                 max_peers=25):            # default in Quorum
+                 port=30303,  # default in Quorum. needed to make enode_id_geth.
+                 rpcport=8545,  # default in Quorum.
+                 max_peers=25):  # default in Quorum
         self.base_dir = os.path.join(context, self.blockchain_dir_name)
         self.qdata_dir = os.path.join(self.base_dir, self.qdata_dir_name)
         self.dd_dir = os.path.join(self.qdata_dir, self.dd_dir_name)
@@ -49,7 +49,7 @@ class Geth:
         self.rpcaddr = rpcaddr
 
         self.geth_accounts = []
-        self.generate_new_account()                                     # only one account per node for now
+        self.generate_new_account()  # only one account per node for now
 
         self.networkid = networkid
 
@@ -76,46 +76,46 @@ class Geth:
         }
 
         self.launch_params = {
-            'geth_binary': "geth",
-            'datadir': make_param("--datadir", os.path.join(self.qdata_dir_name, self.dd_dir_name)),
-            'maxpeers': make_param("--maxpeers", self.max_peers),           # max peers in network
+            'geth_binary': 'geth',
+            'datadir': make_param('--datadir', os.path.join(self.qdata_dir_name, self.dd_dir_name)),
+            'maxpeers': make_param('--maxpeers', self.max_peers),  # max peers in network
             'geth_log_file': os.path.join(self.qdata_dir_name, self.dd_dir_name, self.logs_dir_name, self.log_file_name),
-            'unlock': "--unlock 0",         # only one account for now. So unlock first account.
-            'password': make_param("--password", self.passwords_file_name),       #should be part of QuorumNetwork as accounts are created there and so is this file
-            'networkid': make_param("--networkid", self.networkid),
-            'verbosity': make_param("--verbosity", 2),                      # 5 is highest
+            'unlock': '--unlock 0',  # only one account for now. So unlock first account.
+            'password': make_param('--password', self.passwords_file_name),  # should be part of QuorumNetwork as accounts are created there and so is this file
+            'networkid': make_param('--networkid', self.networkid),
+            'verbosity': make_param('--verbosity', 2),  # 5 is highest
 
             # RPC related
-            'rpc': "--rpc",
-            'rpcaddr': make_param("--rpcaddr", self.rpcaddr),
-            'rpcport': make_param("--rpcport", self.rpcport),
-            'rpcapi': make_param("--rpcapi", "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum"),
-            'rpccorsdomain': "?",
+            'rpc': '--rpc',
+            'rpcaddr': make_param('--rpcaddr', self.rpcaddr),
+            'rpcport': make_param('--rpcport', self.rpcport),
+            'rpcapi': make_param('--rpcapi', 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum'),
+            'rpccorsdomain': '?',
 
             # network related
-            'port': make_param("--port", self.port),
-            'nodiscover': "--nodiscover",                       # For private networks, all peer additions are manual.
-            'permissioned': "?",
-            'targetgaslimit': "?",
+            'port': make_param('--port', self.port),
+            'nodiscover': '--nodiscover',  # For private networks, all peer additions are manual.
+            'permissioned': '?',
+            'targetgaslimit': '?',
 
             # whisper related
-            'shh': "?",
+            'shh': '?',
 
             # web sockets related
-            'ws': "?",
-            'wsaddr': "?",
-            'wsport': "?",
-            'wsapi': "?",
-            'wsorigins': "?",
-            # 'emitcheckpoints': "", part of istanbul. see quorum_cmd_line_options.txt
+            'ws': '?',
+            'wsaddr': '?',
+            'wsport': '?',
+            'wsapi': '?',
+            'wsorigins': '?',
+            # 'emitcheckpoints': '', part of istanbul. see quorum_cmd_line_options.txt
 
             # others
-            'nat': "?",
-            'web3': "?",
+            'nat': '?',
+            'web3': '?',
             'chaindatadir': os.path.join(self.qdata_dir_name,
-                                              self.dd_dir_name,
-                                              self.geth_dir_name,
-                                              self.chaindata_dir_name)
+                                         self.dd_dir_name,
+                                         self.geth_dir_name,
+                                         self.chaindata_dir_name)
         }
 
     def generate_new_account(self):

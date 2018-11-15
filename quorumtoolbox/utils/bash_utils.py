@@ -1,9 +1,10 @@
 import json
-
-import sh
 import re
 from time import sleep
-from . import fs_utils
+
+import sh
+
+from quorumtoolbox.utils import fs_utils
 
 
 def run_cmd(cmd):

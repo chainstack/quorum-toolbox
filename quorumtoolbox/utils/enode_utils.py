@@ -1,4 +1,4 @@
-from . import templating
+from quorumtoolbox.utils import templating
 
 
 # discport is the discovery socket port. Disable it seems to be accepted practise. discovery happens on tcp anyway.

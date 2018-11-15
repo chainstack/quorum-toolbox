@@ -1,15 +1,15 @@
 import json
 
-from quorum_network import QuorumNetwork
+from quorumtoolbox.quorum_network import QuorumNetwork
 
 constellation_params = {
     'other_nodes': []
-    #'other_nodes': ["https://35.240.155.184:9000"]
+    # 'other_nodes': ["https://35.240.155.184:9000"]
 }
 
 raft_params = {
     'peers': []
-    #'peers': ["35.240.155.184"]
+    # 'peers': ["35.240.155.184"]
 }
 
 geth_params = {
@@ -32,28 +32,28 @@ node_options = {
 }
 
 genesis_params = {
-  "coinbase": "0x0000000000000000000000000000000000000000",
-  "config": {
-    "byzantiumBlock": 1,
-    "chainId": node_options['networkid'],
-    "eip150Block": 1,
-    "eip155Block": 0,
-    "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "eip158Block": 1,
-    "isQuorum":True
-  },
-  "difficulty": "0x0",
-  "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
-  "gasLimit": "0xE0000000",
-  "mixhash": "0x00000000000000000000000000000000000000647572616c65787365646c6578",
-  "nonce": "0x0",
-  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-  "timestamp": "0x00"
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "config": {
+        "byzantiumBlock": 1,
+        "chainId": node_options['networkid'],
+        "eip150Block": 1,
+        "eip155Block": 0,
+        "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "eip158Block": 1,
+        "isQuorum": True
+    },
+    "difficulty": "0x0",
+    "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "gasLimit": "0xE0000000",
+    "mixhash": "0x00000000000000000000000000000000000000647572616c65787365646c6578",
+    "nonce": "0x0",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "0x00"
 }
 
 # TODO Read genesis.json created for initial nodes and set as genesis content for new nodes
 if node_options['node_state'] == "new":
-    node_options['genesis_content']= json.dumps(genesis_params)
+    node_options['genesis_content'] = json.dumps(genesis_params)
 
 print("==== START QUORUM NETWORK TEST ====")
 
@@ -69,7 +69,7 @@ qn = QuorumNetwork(node_options['no_of_nodes'],
                    node_options['addresses'],
                    node_options['rpcaddrs'],
                    node_options['node_state'],
-                   genesis_content = node_options['genesis_content'],
+                   genesis_content=node_options['genesis_content'],
                    geth_params=node_options['geth_params'],
                    consensus_params=node_options['consensus_params'],
                    private_manager_params=node_options['private_manager_params'])
@@ -138,7 +138,6 @@ for genesis_file in genesis_files:
 
                 raise Exception("Genesis content {0} in file {2} does not match expected content {1}".
                                 format(genesis_content_f, genesis_params, genesis_file))
-
 
 # TODO Obtain enode from nodekey: /usr/local/bin/bootnode -nodekeyhex the_nodekey -writeaddress
 # use this to check created nodekeys and enode

@@ -2,31 +2,31 @@
 
 ## HOWTO
 
-#### Get Dependencies
+#### Dependencies
 * python 3.5^
-* pipenv
-* See ```Pipfile``` in main repo directory. Requirements can be installed as ```pipenv install```
-* Install [constellation](https://github.com/jpmorganchase/constellation) (this will install the binary ```constellation-node```)
-* Install [geth](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth) (this will install the binaries ```geth``` and ```bootnode```)
-* https://github.com/jpmorganchase/quorum/wiki/Getting-Set-Up?
+* [constellation v0.3.2](https://github.com/jpmorganchase/constellation) (this will install the binary `constellation-node`)
+* [quorum v2.1.1](https://github.com/jpmorganchase/quorum/tree/v2.1.1) (`geth`, `bootnode`)
 
-Tested on Ubuntu 16.04.4 LTS
+#### Works on
+
+* Ubuntu 16.04.4 LTS
+* macOS 10.14
 
 
-**Clone Repo and cd to quorum-toolbox.**
 
+**Clone Repo and cd to quorum-toolbox and run `python setup.py develop`**
 
 **Full test:**
-This test creates necessary artifacts for a two node 
+This test creates necessary artifacts for a two node
 Quorum network. This includes creation of Constellation,
 Raft, Geth as well as other components and artifacts required
 for the network. This test uses the subtests which are listed below.
 
 *If this test successfully completes, the subtests need not be run.*
 
-* In main repo directory, execute ```test_all.sh```. Each components of the Quorum Network will then be created locally 
+* In main repo directory, execute ```tests/test_all.sh```. Each components of the Quorum Network will then be created locally
 and tested.
- 
+
 ___
 
 ### Subtests

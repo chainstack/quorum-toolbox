@@ -1,6 +1,6 @@
-from . import fs_utils
-
 from string import Template
+
+from . import fs_utils
 
 
 def template_substitute(template, kwds, write=True):
@@ -14,7 +14,7 @@ def template_substitute(template, kwds, write=True):
     :return: The replaced string result. When template is a file, the contents of the file is overwritten
     with the replaced string result.
     """
-    
+
     is_file = fs_utils.is_a_file(template)
 
     if is_file:
@@ -29,5 +29,3 @@ def template_substitute(template, kwds, write=True):
         fs_utils.write_file(template, t)
 
     return t
-
-

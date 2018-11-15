@@ -1,41 +1,40 @@
-import os
 import json
+import os
 
-from utils import constellation_utils
-from utils import templating
-from utils.bash_utils import launch_constellation
+from quorumtoolbox.utils import constellation_utils, templating
+from quorumtoolbox.utils.bash_utils import launch_constellation
 
 
 class Constellation:
-    constellation_dir_name = "constellation"
-    storage_dir_name = "storage"
-    keys_dir_name = "keys"
-    logs_dir_name = "logs"
+    constellation_dir_name = 'constellation'
+    storage_dir_name = 'storage'
+    keys_dir_name = 'keys'
+    logs_dir_name = 'logs'
 
-    socket_file_name = "constellation.ipc"
-    config_file_name = "constellation.config"
-    log_file_name = "constellation.log"
-    launch_script_file_name = "launch_constellation.sh"
+    socket_file_name = 'constellation.ipc'
+    config_file_name = 'constellation.config'
+    log_file_name = 'constellation.log'
+    launch_script_file_name = 'launch_constellation.sh'
 
-    key_name_pfx = "node"
-    arch_key_name_pfx = "arch_node"
+    key_name_pfx = 'node'
+    arch_key_name_pfx = 'arch_node'
 
-    pub_key_file_name = key_name_pfx + ".pub"
-    pri_key_file_name = key_name_pfx + ".key"
-    arch_pub_key_file_name = arch_key_name_pfx + ".pub"
-    arch_pri_key_file_name = arch_key_name_pfx + ".key"
+    pub_key_file_name = key_name_pfx + '.pub'
+    pri_key_file_name = key_name_pfx + '.key'
+    arch_pub_key_file_name = arch_key_name_pfx + '.pub'
+    arch_pri_key_file_name = arch_key_name_pfx + '.key'
 
     def __init__(self,
                  context,
                  address,
-                 port=9000,         # default in quorum. needed to make config file.
+                 port=9000,  # default in quorum. needed to make config file.
                  other_nodes=[]):
         self.context = context
         self.address = address
         self.port = port
 
         self._other_nodes = [constellation_utils.make_url(node, 9000) for node in other_nodes]
-        self._url = constellation_utils.make_url(self.address, self.port)           # TODO: Need a more robust make_url
+        self._url = constellation_utils.make_url(self.address, self.port)  # TODO: Need a more robust make_url
 
         self.base_dir = os.path.join(context, self.constellation_dir_name)
         self.storage_dir = os.path.join(self.base_dir, self.storage_dir_name)
@@ -103,7 +102,7 @@ class Constellation:
         # to launch constellation binary via cmd line. To be launched from within the constellation_dir_name.
         self.launch_params = {
             # relative to constellation_dir_name folder
-            'constellation_binary': "constellation-node",
+            'constellation_binary': 'constellation-node',
             'constellation_config_file': self.config_file_name,
             'constellation_log_file': os.path.join(self.logs_dir_name, self.log_file_name),
             'constellation_ipc_file': self.socket_file_name
@@ -112,7 +111,7 @@ class Constellation:
 
         # to be launched from within the constellation_dir_name. e.g nohup $binary $config_file_name 2>> $log_file
         self.launch_cmd_line = templating.template_substitute(
-            "$constellation_binary $constellation_config_file 2>> $constellation_log_file",
+            '$constellation_binary $constellation_config_file 2>> $constellation_log_file',
             self.launch_params
         )
 
@@ -150,9 +149,9 @@ class Constellation:
         templating.template_substitute(self.launch_script_file, self.launch_params)
 
     def launch(self):
-        launch_constellation(self.config_file_name,         # w.r.t to base_dir
-                             self.log_file,                 # w.r.t to curr dir since this is processed by sh
-                             self.base_dir,                 # cwd of script to be launched
+        launch_constellation(self.config_file_name,  # w.r.t to base_dir
+                             self.log_file,  # w.r.t to curr dir since this is processed by sh
+                             self.base_dir,  # cwd of script to be launched
                              self.port)
 
     def run_launch_script(self):

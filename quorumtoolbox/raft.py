@@ -1,10 +1,9 @@
 import json
 import os
 
-import raft_utils
-from utils import templating
-from utils.utils import make_param
-from utils.enode_utils import make_enode_id2
+from quorumtoolbox import raft_utils
+from quorumtoolbox.utils import templating, make_param
+from quorumtoolbox.utils.enode_utils import make_enode_id2
 
 
 class Raft:
@@ -15,8 +14,8 @@ class Raft:
     def __init__(self,
                  context,
                  enode_id_geth,  # e.g. "enode://$enode@$geth_ip:$geth_port?discport=$discport"
-                 node_state,     # "initial" or "new"
-                 port=50400,     # default value in quorum. need to make enode_id.
+                 node_state,  # "initial" or "new"
+                 port=50400,  # default value in quorum. need to make enode_id.
                  block_time=50,  # default value in quorum
                  peers=[]):
 
@@ -62,11 +61,11 @@ class Raft:
             'raft': "--raft",
             'rpcapi': make_param("--rpcapi", "raft"),
             'raftport': make_param("--raftport", self.port),
-            'raftblocktime': make_param("--raftblocktime", self.block_time)     # mint blocks in this many millisecond interval
+            'raftblocktime': make_param("--raftblocktime", self.block_time)  # mint blocks in this many millisecond interval
         }
 
         if self._raft_id is not None:
-            self.launch_params['raftjoinexisting'] = make_param("--raftjoinexisting", self._raft_id)     # join an existing network with this id
+            self.launch_params['raftjoinexisting'] = make_param("--raftjoinexisting", self._raft_id)  # join an existing network with this id
 
     # This node is forming the initial network. RAFT_ID will be automatically assigned by network (based on static-nodes
     # .json). so, don't bother.

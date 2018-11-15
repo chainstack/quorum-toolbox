@@ -1,4 +1,4 @@
-from create_quorum_node import CreateQuorumNode
+from quorumtoolbox.create_quorum_node import CreateQuorumNode
 
 print("Creating initial node for new Quorum network")
 
@@ -14,7 +14,7 @@ node_params = {
 qn = CreateQuorumNode(node_params)
 
 print("Created artifacts in folder: {0}. Note the following:\n 1. Network id: {1}\n 2. Constellation Url: {2}\n"
-            .format(context, qn.networkid, qn.ptm_url))
+      .format(context, qn.networkid, qn.ptm_url))
 
 networkid = qn.networkid
 genesis_content = qn.genesis_content

@@ -1,23 +1,26 @@
-from constellation import Constellation
 import os
-import sh
 from time import sleep
+
+import sh
+import psutil
+
+from quorumtoolbox.constellation import Constellation
 
 print("====== START CONSTELLATION TEST =======")
 cn = Constellation("company1_q2_n0",
-                       "https://10.65.11.96",
-                       port=9000,
-                       other_nodes=["http://127.0.0.1:9000/", "http://10.11.11.11:9000/"])
-
+                   "https://10.65.11.96",
+                   port=9000,
+                   other_nodes=["http://127.0.0.1:9000/", "http://10.11.11.11:9000/"])
 
 print("Created all artifacts and keys need for constellation node. Ready to be launched.")
 
 print("\nKilling any running constellation...")
 
-try:
-    sh.killall("constellation-node")
-except Exception:
-    print("Nothing to kill")
+for proc in psutil.process_iter():
+    if 'constellation-node' in proc.name():
+        proc.kill()
+        print("Pid {0} killed".format(proc.pid))
+
 
 print("Launching constellation with launch script...")
 # Note: at this point, constellation can also be launched as cn.launch(), which will take care of changing cwd and etc.
@@ -32,7 +35,7 @@ cmd()
 
 print("Done")
 print("\nChecking...")
-sleep(5)                                # give some time for constellation to start up
+sleep(5)  # give some time for constellation to start up
 
 port = ""
 with open("constellation.config", "r") as fp:
@@ -40,33 +43,22 @@ with open("constellation.config", "r") as fp:
         if "port" in line:
             port = line.split("= ")[1].replace("\n", "")
 
-print("Looking for constellation running at port {0}".format(port))
+print("Looking for constellation-node running at port {0}".format(port))
 
-cmd = sh.netstat.bake("-lupnt")
-o = cmd()
+is_success = False
 
-stdout = o.stdout.decode(sh.DEFAULT_ENCODING)
+for proc in psutil.process_iter():
+    if 'constellation-node' in proc.name() and proc.connections()[0].laddr[1] == 9000:
+        print("Found constellation-node running with pid {0}".format(proc.pid))
+        print("\nShutting constellation")
+        proc.kill()
+        is_success = True
+        break
 
-found = False
-pid = None
-for line in stdout.split("\n"):
-    if "constellation" in line:
-        found = True
-        if ":" + str(port) + " " in line:
-            pid = line.split(" ")[-1].split("/")[0]
-            print(line)
-            print("Found constellation running with pid {0} at port {1}".format(pid, port))
-
-if not found:
+if not is_success:
     raise Exception("Unable to find constellation running")
 
-if pid is None:
-    raise Exception("Constellation running...but not at port {0}".format(port))
-
 os.chdir(curr_dir)
-
-print("\nShutting constellation")
-sh.kill(pid)
 
 print("If constellation needs to be launched again, use this from constellation directory:")
 print(cn.launch_cmd_line)

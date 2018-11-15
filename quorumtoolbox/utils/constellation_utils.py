@@ -1,7 +1,7 @@
 import os
 import re
 
-from . import bash_utils
+from quorumtoolbox.utils import bash_utils
 
 
 def make_constellation_key(key_name, store_dir=""):
@@ -19,15 +19,9 @@ def make_url(address, port):
     if r.match(address) is None:
         address = "https://" + address
 
-    if address[-1] == "/":                                  # must end in /, if not error on launching constellation
+    if address[-1] == "/":  # must end in /, if not error on launching constellation
         address = address[:-1] + ":" + str(port) + "/"
     else:
         address = address + ":" + str(port) + "/"
 
     return address
-
-
-
-
-
-

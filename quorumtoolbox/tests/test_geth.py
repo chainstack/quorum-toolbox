@@ -1,9 +1,9 @@
-import re
 import json
 import os
-from utils.utils import make_param
+import re
 
-from geth import Geth
+from quorumtoolbox.geth import Geth
+from quorumtoolbox.utils import make_param
 
 
 def check_accounts(geth_i, no_of_accounts):
@@ -63,7 +63,6 @@ geth = Geth(test_param['context'],
             rpcport=test_param['rpcport'],
             max_peers=test_param['max_peers'])
 
-
 print("Checking nodekey ...")
 build_config = geth.build_config
 
@@ -74,14 +73,12 @@ with open(nodekey_file, "r") as fp:
         raise Exception("Generated nodekey {0} in file {1} is of incorrect length {2}, expected {3}"
                         .format(nodekey, nodekey_file, len(nodekey), 64))
 
-
 print("Checking enode and enode_id_geth")
 enode = build_config['network']['enode']
 enode_id_geth = build_config['network']['enode_id_geth']
 
 if len(enode) != 128:
     raise Exception("Generated enode {0} is of incorrect length {1}, expected {2}".format(enode, len(enode), 128))
-
 
 # "enode://35cf975685f7aae0a6a70c80f536e6259e2898e23fcd5b3752924dec50c88b9d6b7e7c889632f37e2af3589cdd4f4c2e8081e3869f4024\
 # a7cf7370aecab58d74@172.13.0.2:30303"
@@ -101,7 +98,6 @@ if o.group(3) != str(test_param['port']):
     raise Exception("Unable to find port {0} in {1} of enode_id_geth {2}".
                     format(test_param['port'], o.group(3), enode_id_geth))
 
-
 print("Checking launch params....")
 launch_params = geth.launch_params
 
@@ -111,7 +107,6 @@ if launch_params['rpcport'] != make_param("--rpcport", test_param['rpcport']):
 if "maxpeers" not in launch_params or launch_params["maxpeers"] != make_param("--maxpeers", test_param['max_peers']):
     print(launch_params)
     raise Exception("--maxpeers error")
-
 
 if geth.no_of_accounts != 1:
     raise Exception("Expected 1 account, got {0} accounts".format(geth.no_of_accounts))
@@ -124,7 +119,6 @@ geth = Geth(test_param['context'],
             test_param['rpcaddr'],
             test_param['network_id'])
 
-
 print("Checking nodekey ...")
 build_config = geth.build_config
 
@@ -134,14 +128,12 @@ with open(nodekey_file, "r") as fp:
     if len(nodekey) != 64:
         raise Exception("Generated nodekey {0} is of incorrect length {1}, expected {2}".format(nodekey, len(nodekey), 64))
 
-
 print("Checking enode and enode_id_geth")
 enode = build_config['network']['enode']
 enode_id_geth = build_config['network']['enode_id_geth']
 
 if len(enode) != 128:
     raise Exception("Generated enode {0} is of incorrect length {1}, expected {2}".format(enode, len(enode), 128))
-
 
 # "enode://35cf975685f7aae0a6a70c80f536e6259e2898e23fcd5b3752924dec50c88b9d6b7e7c889632f37e2af3589cdd4f4c2e8081e3869f4024\
 # a7cf7370aecab58d74@172.13.0.2:30303"
@@ -160,7 +152,6 @@ if o.group(2) != test_param['addr']:
 if o.group(3) != "30303":
     raise Exception("Default port 30303 not in enode_id_geth {0}".format(enode_id_geth))
 
-
 print("Checking launch params....")
 launch_params = geth.launch_params
 
@@ -170,7 +161,6 @@ if launch_params['rpcport'] != make_param("--rpcport", 8545):
 if "maxpeers" not in launch_params or launch_params["maxpeers"] != make_param("--maxpeers", 25):
     print(launch_params)
     raise Exception("--maxpeers error")
-
 
 check_accounts(geth, 1)
 # ---------------------------------------------------------------------------------

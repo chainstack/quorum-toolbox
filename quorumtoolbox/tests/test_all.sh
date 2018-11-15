@@ -11,7 +11,7 @@ cleardirs () {
 
 makedir () {
     echo "Making directory company1_q2_n$1"
-    cp -r template_dir company1_q2_n$1
+    cp -r ../template_dir company1_q2_n$1
 }
 
 checkresult() {
@@ -26,7 +26,7 @@ checkresult() {
 }
 
 
-echo "========================== STARTING ==========================="
+echo "========================== STARTING ==========================="#
 makedir 999
 cleardirs
 

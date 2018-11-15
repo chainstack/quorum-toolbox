@@ -1,7 +1,6 @@
 import re
 
-from quorum_node import QuorumNode
-
+from quorumtoolbox.quorum_node import QuorumNode
 
 # ------------------ Test Raft, Constellation and Geth --------------------------------
 
@@ -65,7 +64,7 @@ config_file = qn.build_configuration['local']['config_file']
 
 def config_check(fullstr):
     def closure_check(substr):
-        regex = re.compile(substr, re.MULTILINE)        # multiline so ^/$ matches at starting/ending of new line also.
+        regex = re.compile(substr, re.MULTILINE)  # multiline so ^/$ matches at starting/ending of new line also.
         result = regex.search(fullstr)
         if result is None:
             raise Exception("{0} not found in config file {1}".format(substr, config_file))
@@ -99,7 +98,7 @@ with open(config_file, "r") as fp:
     check('^RPCADDR=\"--rpcaddr \S+\"$')
 
     check('^RPCPORT=\"--rpcport \d+\"$')
-    check('^RPCAPI=\"--rpcapi \S+\"$')      # \S any non white space char
+    check('^RPCAPI=\"--rpcapi \S+\"$')  # \S any non white space char
     check('^VERBOSITY=\"--verbosity \d\"$')
 
     check('^RAFT=\"--raft\"$')

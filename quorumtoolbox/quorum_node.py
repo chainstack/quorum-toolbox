@@ -1,13 +1,14 @@
 import os
-from raft import Raft
-from geth import Geth
-from constellation import Constellation
-from utils import enode_utils, bash_utils
+
+from quorumtoolbox.constellation import Constellation
+from quorumtoolbox.geth import Geth
+from quorumtoolbox.raft import Raft
+from quorumtoolbox.utils import enode_utils, bash_utils
 
 
 class QuorumNode:
-    blockchain_dir_name = "blockchain"
-    quorum_node_config_file_name = "quorum_node_config.sh"
+    blockchain_dir_name = 'blockchain'
+    quorum_node_config_file_name = 'quorum_node_config.sh'
 
     def __init__(self,
                  context,
@@ -15,8 +16,8 @@ class QuorumNode:
                  rpcaddr,
                  networkid,
                  node_state,
-                 consensus="raft",
-                 private_manager="constellation",
+                 consensus='raft',
+                 private_manager='constellation',
                  geth_params={},
                  consensus_params={},
                  private_manager_params={}):
@@ -25,19 +26,19 @@ class QuorumNode:
 
         self.geth = Geth(context, address, rpcaddr, networkid, **geth_params)
 
-        if consensus.lower() == "raft":
+        if consensus.lower() == 'raft':
             self.consensus = Raft(context, self.geth.enode_id_geth, node_state, **consensus_params)
 
-        if private_manager.lower() == "constellation":
+        if private_manager.lower() == 'constellation':
             self.private_manager = Constellation(context, address, **private_manager_params)
 
         self._enode_id = enode_utils.make_enode_id2(self.geth.enode_id_geth,
-                                                   self.consensus.build_configuration['network']['port'])
+                                                    self.consensus.build_configuration['network']['port'])
 
         self.launch_params = bash_utils.make_quorum_node_launch_params([self.geth.launch_parameters,
-                                              self.consensus.launch_parameters,
-                                              self.private_manager.launch_parameters
-                                              ])        # get launch params from components, combine to launch this node
+                                                                        self.consensus.launch_parameters,
+                                                                        self.private_manager.launch_parameters
+                                                                        ])  # get launch params from components, combine to launch this node
 
         bash_utils.write_quorum_node_launch_config(self.launch_params, self.quorum_node_config_file)
 
@@ -80,4 +81,3 @@ class QuorumNode:
     @property
     def ptm_url(self):
         return self.private_manager.ptm_url
-
