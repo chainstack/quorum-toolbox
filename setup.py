@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -10,10 +10,10 @@ def read(fname):
 
 
 setup(name='quorumtoolbox',
-      version='1.0.1',
+      version='1.0.2',
       description='Quorum-toolbox',
       long_description=read('README.md'),
-      packages=['quorumtoolbox'],
+      packages=find_packages(),
       install_requires=[
           'requests>=2.20.0',
           'sh>=1.12.14',
