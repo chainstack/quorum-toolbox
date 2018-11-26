@@ -1,0 +1,3 @@
+include README.md
+include quorumtoolbox/genesis_template
+recursive-include quorumtoolbox/template_dir *
