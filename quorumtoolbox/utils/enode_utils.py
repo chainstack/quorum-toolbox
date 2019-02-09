@@ -3,7 +3,7 @@ from quorumtoolbox.utils import templating
 
 # discport is the discovery socket port. Disable it seems to be accepted practise. discovery happens on tcp anyway.
 def make_enode_id_geth(enode, geth_address, geth_port):
-    template_str = "enode://$enode@$geth_address:$geth_port?discport=0"
+    template_str = 'enode://$enode@$geth_address:$geth_port?discport=0'
     kwds = {
         'enode': enode,
         'geth_address': geth_address,
@@ -22,7 +22,7 @@ def make_enode_id(enode, geth_address, geth_port, raft_port):
         'raft_port': raft_port
     }
 
-    template_str = "$enode_id_geth&raftport=$raft_port"
+    template_str = '$enode_id_geth&raftport=$raft_port'
 
     return templating.template_substitute(template_str, kwds)
 
@@ -33,6 +33,6 @@ def make_enode_id2(enode_id_geth, raft_port):
         'raft_port': raft_port
     }
 
-    template_str = "$enode_id_geth&raftport=$raft_port"
+    template_str = '$enode_id_geth&raftport=$raft_port'
 
     return templating.template_substitute(template_str, kwds)

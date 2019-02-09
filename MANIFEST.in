@@ -1,3 +1,4 @@
 include README.md
 include quorumtoolbox/genesis_template
+include quorumtoolbox/genesis_template_ibft
 recursive-include quorumtoolbox/template_dir *

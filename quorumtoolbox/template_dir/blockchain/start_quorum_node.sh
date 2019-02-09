@@ -9,11 +9,15 @@ CONFIG_FILE="quorum_node_config.sh"
 echo "[*] Getting config from $CONFIG_FILE"
 source $CONFIG_FILE
 
-GETH_ARGS="$DATADIR $NODISCOVER $NETWORKID $PORT $VERBOSITY $UNLOCK $PASSWORD"
-RPC_ARGS="$RPC $RPCADDR $RPCPORT $RPCAPI $RPCCORSDOMIAN"
-RAFT_ARGS="$RAFT $RAFTPORT $RAFTJOINEXISTING $MAXPEERS $RAFTBLOCKTIME"
+GETH_ARGS="$DATADIR $NODISCOVER $NETWORKID $PORT $VERBOSITY $MAXPEERS $UNLOCK $PASSWORD"
+RPC_ARGS="$RPC $RPCADDR $RPCPORT $RPCAPI"
+RAFT_ARGS="$RAFT $RAFTPORT $RAFTJOINEXISTING  $RAFTBLOCKTIME"
+IBFT_ARGS="$ISTANBUL_BLOCKPERIOD $SYNCMODE $MINE $MINERTHREADS "
+
+# Add more when they are needed and configured
 #WS_ARGS="$WS $WSADDR $WSPORT $WSAPI $WSORIGINS"
 #OTHER_ARGS="$EMITCHECKPOINTS $TARGETGASLIMIT $SHH $NAT"
+#$RPCCORSDOMAIN
 
 #---------------------------------- Process genesis block ----------------------------------------
 echo "[*] Checking if genesis block needs to be mined..."
@@ -63,13 +67,14 @@ cd ../blockchain
 echo "[*] Geth Verions:"
 geth version | grep -i "version"
 
-QUORUM_ARGS="$GETH_ARGS $RAFT_ARGS $RPC_ARGS"
+# Either of RAFT or IBFT args will be set
+QUORUM_ARGS="$GETH_ARGS $RAFT_ARGS $IBFT_ARGS $RPC_ARGS"
 echo "[*] Starting Quorum node with args:"
 echo "$QUORUM_ARGS"
 
-echo "[*] Launching Quorum node...(this will not return)"
+echo "[*] Launching Quorum node in background"
 
-PRIVATE_CONFIG=../constellation/"$CONSTELLATION_IPC_FILE" nohup  "$GETH_BINARY" "$QUORUM_ARGS" 2>>"$GETH_LOG_FILE" &
+PRIVATE_CONFIG=../constellation/"$CONSTELLATION_IPC_FILE" nohup  "$GETH_BINARY" $QUORUM_ARGS 2>>"$GETH_LOG_FILE" &
 
 #------------------------------------------------------------------------------------------
 # Give some time for geth to start

@@ -6,12 +6,12 @@ from setuptools import setup, find_packages
 
 
 def read(fname):
-    return open(Path(__file__).parent / Path(fname)).read()
+    return open(str(Path(__file__).parent / Path(fname))).read()
 
 
 setup(name='quorumtoolbox',
-      version='1.0.6',
-      description='Quorum-toolbox',
+      version='2.0.0',
+      description='Quorum-toolbox (supports Raft and Ibft)',
       long_description=read('README.md'),
       packages=find_packages(),
       include_package_data=True,

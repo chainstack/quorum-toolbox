@@ -1,24 +1,38 @@
+---
 version: 2
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - test
+
+      - publish:
+          context: "PyPI account"
+          filters:
+            branches:
+              only: master
+
 jobs:
   test:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
+      - setup_remote_docker:
+          version: stable
+
       - checkout
 
-      - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}
-
       - run:
-          name: install python dependencies
+          name: Run tests
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            python setup.py test
+            docker build . -t quorumtoolbox
+            docker run quorumtoolbox
 
   publish:
+
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
       - checkout
 
@@ -36,13 +50,3 @@ jobs:
           name: create and publish packages
           command: |
             python setup.py sdist bdist_wheel upload
-
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - publish:
-          context: "PyPI account"
-          filters:
-            branches:
-              only: master

@@ -5,16 +5,20 @@
   "config": {
     "byzantiumBlock": 1,
     "chainId": $chain_id,
-    "eip150Block": 1,
+    "eip150Block": 2,
     "eip155Block": 0,
     "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "eip158Block": 1,
-    "isQuorum":true
+    "eip158Block": 3,
+    "isQuorum":true,
+    "istanbul": {
+        "epoch": 30000,
+        "policy": 0
+      }
   },
-  "difficulty": "0x0",
+  "difficulty": "0x1",
   "extraData": $extra_data,
   "gasLimit": "0xE0000000",
-  "mixhash": "0x00000000000000000000000000000000000000647572616c65787365646c6578",
+  "mixhash": "0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365",
   "nonce": "0x0",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "timestamp": "0x00"

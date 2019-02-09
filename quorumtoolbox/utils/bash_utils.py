@@ -30,7 +30,7 @@ def generate_constellation_key(key_name):
     Exit code 0 is success.
     """
 
-    cmd = sh.Command("constellation-node").bake(generatekeys=key_name, _in="\n")  # at pw prompt, enter null in stdin.
+    cmd = sh.Command('constellation-node').bake(generatekeys=key_name, _in='\n')  # at pw prompt, enter null in stdin.
     result = run_cmd(cmd)
 
     return result['stdout']
@@ -44,9 +44,9 @@ def generate_constellation_key(key_name):
 def launch_constellation(launch_configuration_file, log_file, cwd=None, port=9000):
     pid = check_if_constellation_running(port)
     if pid is not None:
-        raise Exception("Looks like constellation already running on port {0} with pid {1}".format(port, pid))
+        raise Exception('Looks like constellation already running on port {0} with pid {1}'.format(port, pid))
 
-    cmd = sh.Command("constellation-node").bake(launch_configuration_file, _err=log_file, _cwd=cwd, _bg=True)
+    cmd = sh.Command('constellation-node').bake(launch_configuration_file, _err=log_file, _cwd=cwd, _bg=True)
     run_cmd(cmd)
 
     sleep(5)
@@ -58,15 +58,15 @@ def run_launch_script():
 
 
 def check_if_constellation_running(port):
-    cmd = sh.netstat.bake("-lupnt")
+    cmd = sh.netstat.bake('-lupnt')
     result = run_cmd(cmd)
 
     stdout = result['stdout']
-    r = re.compile(":" + str(port) + " ")
+    r = re.compile(':' + str(port) + ' ')
 
-    for line in stdout.split("\n"):
+    for line in stdout.split('\n'):
         if r.search(line):
-            return line.split(" ")[-1].split("/")[0]
+            return line.split(' ')[-1].split('/')[0]
 
     return None
 
@@ -93,7 +93,7 @@ def generate_nodekey(nodekey_file):
     Exit code 0 is success.
     """
 
-    cmd = sh.Command("bootnode").bake("-genkey", nodekey_file, "-writeaddress")
+    cmd = sh.Command('bootnode').bake('-genkey', nodekey_file, '-writeaddress')
     run_cmd(cmd)
 
     nodekey = fs_utils.read_file(nodekey_file)
@@ -112,10 +112,10 @@ def generate_enode(nodekey_file):
     Exit code 0 is success.
     """
 
-    cmd = sh.Command("bootnode").bake("-nodekey", nodekey_file, "-writeaddress")
+    cmd = sh.Command('bootnode').bake('-nodekey', nodekey_file, '-writeaddress')
     result = run_cmd(cmd)
 
-    enode = result['stdout'].replace("\n", "")
+    enode = result['stdout'].replace('\n', '')
 
     return enode
 
@@ -133,13 +133,13 @@ def generate_geth_account(store_dir, passwords_file):
     Exit code 0 is success.
     """
 
-    cmd = sh.Command("geth").bake("--password", passwords_file, "account", "new", datadir=store_dir)
+    cmd = sh.Command('geth').bake('--password', passwords_file, 'account', 'new', datadir=store_dir)
     result = run_cmd(cmd)
 
     # Extract the address from stdout
     # e.g: 'Address: {4ce81fd2e8130716cad503f05bad7eb00d7f0c56}'
     stdout = result['stdout']
-    r = re.compile("Address: {([0-9A-Za-z]+)}")
+    r = re.compile(r'Address: {([0-9A-Za-z]+)}')
     o = r.search(stdout)
 
     return o.group(1)
@@ -160,19 +160,19 @@ def make_quorum_node_launch_params(list_of_kv):
 
 def handle_duplicate_launch_params(key, value1, value2):
     # e.g. --rpcapi raft and --rpcapi admin,db,eth will be contantenated to --rpcapi raft,admin,db,eth
-    if key == "rpcapi":
-        return ",".join([value1, value2.replace("--rpcapi", "").replace(" ", "")])
+    if key == 'rpcapi':
+        return ','.join([value1, value2.replace('--rpcapi', '').replace(' ', '')])
 
-    raise Exception("Unknown duplicate parameter {0}".format(key))
+    raise Exception('Unknown duplicate parameter {0}'.format(key))
 
     # add any more special cases as needed
 
 
 def make_quorum_node_launch_config(launch_params):
-    lines = "#!/bin/bash" + "\n\n"  # use bash
+    lines = '#!/bin/bash' + '\n\n'  # use bash
 
     for key, value in launch_params.items():
-        lines += key.upper() + "=" + json.dumps(value) + "\n"  # e.g DATADIR="--datadir qdata/dd"
+        lines += key.upper() + '=' + json.dumps(value) + '\n'  # e.g DATADIR='--datadir qdata/dd'
 
     return lines
 
@@ -180,3 +180,118 @@ def make_quorum_node_launch_config(launch_params):
 def write_quorum_node_launch_config(launch_params, config_file):
     content = make_quorum_node_launch_config(launch_params)
     fs_utils.write_file(config_file, content)
+
+
+def generate_ibftaddress_nodekey_enode(nodekey_file):
+    """
+        Generate the following: ibft address, geth nodekey (save this in nodekey_file) and geth enode.
+
+        Bash command that is executed: istanbul setup --num 1 --nodes --verbose
+
+        :param: nodekey_file: file where node's nodekey is to be stored.
+        :return: Three parameters: ibft address, nodekey and enode
+        """
+
+    cmd = sh.Command('istanbul').bake('setup', '--num', '1', '--nodes', '--verbose')
+    result = run_cmd(cmd)
+
+    stdout = result['stdout']
+
+    ibft_address = parse_ibft_address(stdout)
+    nodekey = parse_node_key(stdout)
+    enode = parse_enode(stdout)
+
+    fs_utils.write_file(nodekey_file, nodekey)
+
+    return ibft_address, nodekey, enode
+
+
+def generate_ibft_extradata(ibft_addresses):
+    """
+    Generate genesis extradata for ibft.
+
+    Bash command that is executed: istanbul extra encode --vanity 0x00 --validators 0xibftaddr1,0xibftaddr2...
+
+    :param: ibft_addrs: a list of ibft addresses
+    :return: extradata: for use in genesis content
+    """
+
+    validators = sort_ibft_addresses(ibft_addresses)
+    cmd = sh.Command('istanbul').bake('extra', 'encode', '--vanity', '0x00',
+                                      '--validators', validators)
+    result = run_cmd(cmd)
+
+    stdout = result['stdout']
+    extra_data = parse_extra_data(stdout)
+
+    return extra_data
+
+
+def parse_ibft_address(input):
+    # e.g. "Address": "0x256aa60787d6c0854d2498766d981c3658dfd99f"
+    # ibft_address = "0x256aa60787d6c0854d2498766d981c3658dfd99f"
+    ibft_regex = re.compile(r'\"Address\": \"(0x[a-z0-9A-Z]{40})\"')
+    ibft_address = ibft_regex.search(input).group(1)
+
+    return ibft_address
+
+
+def parse_node_key(input):
+    # e.g. "Nodekey": "4ae0c61391ddb1a194d0db4210e6a171aeca278eba27635f29f92ce98f0f86d4",
+    # nodekey = "4ae0c61391ddb1a194d0db4210e6a171aeca278eba27635f29f92ce98f0f86d4"
+    nodekey_regex = re.compile(r'\"Nodekey\": \"([a-z0-9A-Z]{64})\"')
+    nodekey = nodekey_regex.search(input).group(1)
+
+    return nodekey
+
+
+def parse_enode(input):
+    # e.g. "NodeInfo": "enode://e51b506fcddce909027df77bb48980b38c4a323d0f5c644de88e4f22b26b5a3b0e4c088a4dd5712fdf3ff29
+    # 46c89fa3d537e39789161c97b1d32a31d18e74dad@0.0.0.0:30303?discport=0"
+    # enode = "e51b506fcddce909027df77bb48980b38c4a323d0f5c644de88e4f22b26b5a3b0e4c088a4dd5712fdf3ff2946c89fa3d537e3978
+    # 9161c97b1d32a31d18e74dad"
+    enode_regex = re.compile(r'\"NodeInfo\": \"enode://([a-z0-9A-Z]{128})')
+    enode = enode_regex.search(input).group(1)
+
+    return enode
+
+
+def sort_ibft_addresses(ibft_addresses):
+    # e.g. convert ['0x7d8299de61faed3686ba4c4e6c3b9083d7e2371', '0x475cc98b5521ab2a1335683e7567c8048bfe79ed'] to
+    # [44783521692591246147530128130371968073130189681, 407407570268637906433216223294237923495647279597] and then sort
+    ibft_addresses = [int(address, 16) for address in ibft_addresses]
+    ibft_addresses.sort()
+
+    # convert back to hex and pad to proper length
+    result = []
+    for address in ibft_addresses:
+        result.append(pad_ibft_address(hex(address)))
+
+    return result
+
+
+def pad_ibft_address(address):
+    if len(address) > 42:
+        raise Exception('Something is wrong...ibft address {0} is > 42 in length'.format(address))
+
+    pad_len = 42 - len(address)
+
+    # e.g. address 0x7d8299de61faed3686ba4c4e6c3b9083d7e2371 padded to length 42 as
+    # 0x07d8299de61faed3686ba4c4e6c3b9083d7e2371
+    return ''.join(['0x', '0' * pad_len, address.split('0x')[1]])
+
+
+def parse_extra_data(input):
+    # e.g. Encoded Istanbul extra-data: 0x0000000000000000000000000000000000000000000000000000000000000000f89af85494475c
+    # c98b5521ab2a1335683e7567c8048bfe79ed9407d8299de61faed3686ba4c4e6c3b9083d7e2371944fe035ce99af680d89e2c4d73aca01dbfc
+    # 1bd2fd94dc421209441a754f79c4a4ecd2b49c935aad0312b84100000000000000000000000000000000000000000000000000000000000000
+    # 00000000000000000000000000000000000000000000000000000000000000000000c0
+
+    # extradata = Encoded Istanbul extra-data: 0x0000000000000000000000000000000000000000000000000000000000000000f89af85
+    # 494475cc98b5521ab2a1335683e7567c8048bfe79ed9407d8299de61faed3686ba4c4e6c3b9083d7e2371944fe035ce99af680d89e2c4d73ac
+    # a01dbfc1bd2fd94dc421209441a754f79c4a4ecd2b49c935aad0312b8410000000000000000000000000000000000000000000000000000000
+    # 000000000000000000000000000000000000000000000000000000000000000000000000000c0
+    extradata_regex = re.compile(r'Encoded Istanbul extra-data: (0x[a-z0-9A-Z]+)')
+    extradata = extradata_regex.search(input).group(1)
+
+    return extradata

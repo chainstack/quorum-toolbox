@@ -24,7 +24,7 @@ def get_raft_joining_id(peers, enode_id):
             'id': random.randint(1, 1000000)
         }
 
-        # TODO direct data=body dont seem to work for GO API. Why? something to do with ' vs ' when representing string
+        # TODO direct data=body dont seem to work for GO API. Why? something to do with " vs ' when representing string
         try:
             res = requests.post(address, data=json.dumps(body).encode('utf-8'))
             raft_joining_id = json.loads(res.text)['result']
@@ -43,17 +43,17 @@ def get_raft_joining_id(peers, enode_id):
 
 # TODO: 8545, the default geth RPC port, must come from some config file.
 def make_url(address):
-    r = re.compile("^http://")
+    r = re.compile(r'^http://')
     if r.match(address) is None:
-        address = "http://" + address
+        address = 'http://' + address
 
     # e.g. :9000 or :9000/, @ end of address
-    r = re.compile(":[0-9]+/?$")
+    r = re.compile(r':[0-9]+/?$')
 
     if r.match(address) is None:
-        if address[-1] == "/":
-            address = address[:-1] + ":" + "8545" + "/"
+        if address[-1] == '/':
+            address = address[:-1] + ':' + '8545' + '/'
         else:
-            address = address + ":" + "8545" + "/"
+            address = address + ':' + '8545' + '/'
 
     return address

@@ -1,37 +1,35 @@
 import json
 import os
 
-from quorumtoolbox import raft_utils
-from quorumtoolbox.utils import templating, make_param
+from quorumtoolbox.utils import raft_utils, templating
 from quorumtoolbox.utils.enode_utils import make_enode_id2
+from quorumtoolbox.utils.node_utils import make_node_param
 
 
 class Raft:
-    raft_dir_name = "raft"
+    raft_dir_name = 'raft'
 
-    raft_id_file_name = "raftid.json"
+    raft_id_file_name = 'raftid.json'
 
     def __init__(self,
                  context,
-                 enode_id_geth,  # e.g. "enode://$enode@$geth_ip:$geth_port?discport=$discport"
-                 node_state,  # "initial" or "new"
+                 enode_id_geth,  # e.g. 'enode://$enode@$geth_ip:$geth_port?discport=$discport'
+                 node_state,  # 'initial' or 'new'
                  port=50400,  # default value in quorum. need to make enode_id.
-                 block_time=50,  # default value in quorum
-                 peers=[]):
+                 block_time=50,  # default value in quorum. mint blocks at this many milliseconds interval
+                 peers=None):
 
         self.context = context
         self.enode_id_geth = enode_id_geth
         self.port = port
         self.enode_id = make_enode_id2(self.enode_id_geth, self.port)
         self.block_time = block_time
-        self.peers = peers
         self.node_state = node_state
+        self.peers = [] if peers is None else peers
+
         self._raft_id = None
 
-        {
-            'initial': self.init_initial,
-            'new': self.init_new
-        }[self.node_state]()
+        self.init_node(self.node_state)
 
         self.base_dir = os.path.join(context, self.raft_dir_name)
         self.raft_id_file = os.path.join(self.base_dir, self.raft_id_file_name)
@@ -58,14 +56,23 @@ class Raft:
         # configuration related to launching this instance of raft, used in cmd line args when launching geth.
         # https://github.com/jpmorganchase/quorum/blob/master/raft/doc.md
         self.launch_params = {
-            'raft': "--raft",
-            'rpcapi': make_param("--rpcapi", "raft"),
-            'raftport': make_param("--raftport", self.port),
-            'raftblocktime': make_param("--raftblocktime", self.block_time)  # mint blocks in this many millisecond interval
+            'raft': '--raft',
+            'rpcapi': make_node_param('--rpcapi', 'raft'),
+            'raftport': make_node_param('--raftport', self.port),
+
+            # mint blocks in this many millisecond interval
+            'raftblocktime': make_node_param('--raftblocktime', self.block_time)
         }
 
         if self._raft_id is not None:
-            self.launch_params['raftjoinexisting'] = make_param("--raftjoinexisting", self._raft_id)  # join an existing network with this id
+            self.launch_params['raftjoinexisting'] = make_node_param(
+                '--raftjoinexisting', self._raft_id)  # join an existing network with this id
+
+    def init_node(self, node_state):
+        {
+            'initial': self.init_initial,
+            'new': self.init_new
+        }[node_state]()
 
     # This node is forming the initial network. RAFT_ID will be automatically assigned by network (based on static-nodes
     # .json). so, don't bother.

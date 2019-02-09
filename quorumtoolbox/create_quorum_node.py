@@ -2,38 +2,45 @@ import os
 import random
 
 from quorumtoolbox.quorum_network import QuorumNetwork
-from quorumtoolbox.utils import fs_utils
+from quorumtoolbox.utils import fs_utils, node_utils
+
+""" This class is used to create a single Quorum node-
+1. Initial or New Raft node
+2. Initial or New IBFT node
+See test_create_quorum_node.py to see how this works.
+"""
 
 
-# This class is used to create a single Quorum node- either Initial or New node.
-# See test_create_quorum_node.py to see how this works.
 class CreateQuorumNode:
-    def __init__(self, node_params, network_params={}):
-        other_raft_public_ip = network_params.get('other_raft_public_ip', None)
-        other_constellation_public_ip = network_params.get('other_constellation_public_ip', None)
+    def __init__(self, node_params, network_params=None):
+        network_params = {} if network_params is None else network_params
 
-        self.genesis = network_params.get('genesis_content', '')
-
-        self.constellation_params = {
-            'other_nodes': [other_constellation_public_ip] if other_constellation_public_ip is not None else []
-        }
-
-        self.raft_params = {
-            'peers': [other_raft_public_ip] if other_raft_public_ip is not None else []
-        }
+        self.sanity_checks(node_params, network_params)
+        self.context = node_params['context']
+        self.address = node_params['address']
+        self.node_state = node_params['node_state']
+        self._networkid = random.randint(100, 100000) if 'networkid' not in node_params else node_params['networkid']
 
         self.geth_params = {
             'max_peers': 250
         }
 
-        if node_params.get('networkid', None) is None:
-            self._networkid = random.randint(100, 100000)
-        else:
-            self._networkid = node_params['networkid']
+        self.genesis = ''
+        self.consensus_params = {
+            'peers': []
+        }
+        self.ptm_params = {
+            'other_nodes': []
+        }
 
-        self.context = node_params['context']
-        self.address = node_params['address']
-        self.node_state = node_params['node_state']
+        if node_utils.is_new_node(node_params['node_state']):
+            self.genesis = network_params['genesis_content']
+            self.consensus_params = {
+                'peers': [network_params['other_node_public_ip']]
+            }
+            self.ptm_params = {
+                'other_nodes': [network_params['other_constellation_public_ip']]
+            }
 
         self.create_context()
 
@@ -45,13 +52,15 @@ class CreateQuorumNode:
                                 self.node_state,
                                 genesis_content=self.genesis,
                                 geth_params=self.geth_params,
-                                consensus_params=self.raft_params,
-                                private_manager_params=self.constellation_params)
+                                consensus_params=self.consensus_params,
+                                private_manager_params=self.ptm_params)
 
         self._genesis_files = self.qn.build_configuration['local']['genesis_files']
-        self._consensus_ids = self.qn.build_configuration['network']['consensus_ids']
-        self._ptm_peers = self.qn.build_configuration['network']['private_manager_peers']
-        self._ptm_urls = self.qn.build_configuration['network']['private_manager_urls']
+        self._consensus_ids = self.qn.consensus_ids
+        self._enode_ids = self.qn.enode_ids
+        self._ibft_addresses = self.qn.ibft_addresses
+        self._ptm_peers = self.qn.private_manager_peers
+        self._ptm_urls = self.qn.private_manager_urls
 
     @property
     def genesis_content(self):
@@ -64,6 +73,14 @@ class CreateQuorumNode:
     @property
     def consensus_id(self):
         return self._consensus_ids[0]
+
+    @property
+    def enode_id(self):
+        return self._enode_ids[0]
+
+    @property
+    def ibft_address(self):
+        return self._ibft_addresses[0]
 
     @property
     def ptm_url(self):
@@ -80,3 +97,33 @@ class CreateQuorumNode:
             pass
 
         fs_utils.copy_dir(os.path.dirname(os.path.abspath(__file__)) + '/template_dir', self.context)
+
+    def sanity_checks(self, node_params, network_params):
+        self.sanity_checks_common(node_params)
+
+        if node_utils.is_new_node(node_params['node_state']):
+            self.sanity_checks_new_node(network_params)
+
+        # no further checks for initial node
+
+    def sanity_checks_common(self, node_params):
+        if not node_params.get('context'):
+            raise Exception('Error, context parameter not provided')
+
+        if not node_params.get('address'):
+            raise Exception('Error, address parameter not provided')
+
+        node_state = node_params.get('node_state')
+
+        if not node_state or not node_utils.is_raft_or_istanbul_node(node_state):
+            raise Exception('Error, node_state parameter not provided, or it is wrong')
+
+    def sanity_checks_new_node(self, network_params):
+        if not network_params.get('genesis_content'):
+            raise Exception('Error, genesis_content parameter not provided')
+
+        if not network_params.get('other_node_public_ip'):
+            raise Exception('Error, other_node_public_ip parameter not provided')
+
+        if not network_params.get('other_constellation_public_ip'):
+            raise Exception('Error, other_constellation_public_ip parameter not provided')

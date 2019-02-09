@@ -20,3 +20,5 @@ engines:
 exclude_paths:
 - "test_*.py"
 - "template_dir/"
+- "quorumtoolbox/tests/"
+- "quorumtoolbox/template_dir/"

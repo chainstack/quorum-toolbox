@@ -1,4 +1,5 @@
 import os
+
 from shutil import rmtree, copytree, copy2
 
 
@@ -6,7 +7,7 @@ def make_full_path(path, name):
     return os.path.join(path, name)
 
 
-def make_dir(dir_to_create, where=""):
+def make_dir(dir_to_create, where=''):
     """
     Create new directory, recursively creating parent directories as needed.
 
@@ -22,7 +23,7 @@ def make_dir(dir_to_create, where=""):
     os.makedirs(dir_to_create)
 
 
-def del_dir(dir_to_delete, where=""):
+def del_dir(dir_to_delete, where=''):
     """
     Delete directory, recursively all files and directories within are also deleted.
 
@@ -37,7 +38,7 @@ def del_dir(dir_to_delete, where=""):
     rmtree(dir_to_delete)
 
 
-def copy_dir(dir_to_copy, dst, src=""):
+def copy_dir(dir_to_copy, dst, src=''):
     """
     Copy directory, recursively copy all contents within and recursively create destination path as needed.
 
@@ -53,7 +54,7 @@ def copy_dir(dir_to_copy, dst, src=""):
     copytree(dir_to_copy, dst)
 
 
-def copy_file(file_to_copy, dst, src=""):
+def copy_file(file_to_copy, dst, src=''):
     """
     Copy file including permissions and metadata.
 
@@ -69,7 +70,7 @@ def copy_file(file_to_copy, dst, src=""):
     copy2(file_to_copy, dst)
 
 
-def copy_files_ext(ext_to_copy, dst, src=""):
+def copy_files_ext(ext_to_copy, dst, src=''):
     """
     Copy files of particular extension. Files only from the parent level are copied, not recursive.
 
@@ -81,8 +82,8 @@ def copy_files_ext(ext_to_copy, dst, src=""):
     If not given, current working directory is used.
     :return: None
     """
-    if src == "":
-        contents = os.listdir(".")
+    if src == '':
+        contents = os.listdir('.')
     else:
         contents = os.listdir(src)
 
@@ -91,24 +92,24 @@ def copy_files_ext(ext_to_copy, dst, src=""):
             copy_file(elem, dst, src=src)
 
 
-def is_a_file(file_to_check, src=""):
+def is_a_file(file_to_check, src=''):
     file_to_check = make_full_path(src, file_to_check)
     return os.path.isfile(file_to_check)
 
 
-def read_file(file_name, src=""):
-    with open(make_full_path(src, file_name), "r") as fp:
+def read_file(file_name, src=''):
+    with open(make_full_path(src, file_name), 'r') as fp:
         result = fp.read()
 
     return result
 
 
-def write_file(file_name, content, src=""):
-    with open(make_full_path(src, file_name), "w") as fp:
+def write_file(file_name, content, src=''):
+    with open(make_full_path(src, file_name), 'w') as fp:
         fp.write(content)
 
 
-def change_file_permissions(file_name, new_permission, src=""):
+def change_file_permissions(file_name, new_permission, src=''):
     file_name = make_full_path(src, file_name)
 
 

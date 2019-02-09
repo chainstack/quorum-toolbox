@@ -1,6 +1,6 @@
 from string import Template
 
-from . import fs_utils
+from quorumtoolbox.utils import fs_utils
 
 
 def template_substitute(template, kwds, write=True):

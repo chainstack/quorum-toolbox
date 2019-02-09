@@ -1,6 +1,7 @@
 import os
 
-from quorumtoolbox.utils import bash_utils, enode_utils, make_param
+from quorumtoolbox.utils import bash_utils, enode_utils
+from quorumtoolbox.utils.node_utils import make_node_param
 
 
 class Geth:
@@ -43,7 +44,9 @@ class Geth:
         self.rpcport = rpcport
         self.max_peers = max_peers
 
-        self.nodekey, self.enode = self.generate_nodekey_and_enode()
+        # ibft address is generated from nodekey, and is generated always. It is up the caller to use it or not.
+        self._ibft_address, self._nodekey, self.enode = self.generate_ibftaddress_nodekey_enode()
+
         self._enode_id_geth = self.make_enode_id_geth()
 
         self.rpcaddr = rpcaddr
@@ -59,6 +62,7 @@ class Geth:
                 'port': self.port,
                 'enode': self.enode,
                 'enode_id_geth': self.enode_id_geth,
+                'ibft_address': self.ibft_address,
                 'max_peers': self.max_peers
             },
 
@@ -75,25 +79,28 @@ class Geth:
             }
         }
 
+        # common geth launch parameters
         self.launch_params = {
             'geth_binary': 'geth',
-            'datadir': make_param('--datadir', os.path.join(self.qdata_dir_name, self.dd_dir_name)),
-            'maxpeers': make_param('--maxpeers', self.max_peers),  # max peers in network
-            'geth_log_file': os.path.join(self.qdata_dir_name, self.dd_dir_name, self.logs_dir_name, self.log_file_name),
+            'datadir': make_node_param('--datadir', os.path.join(self.qdata_dir_name, self.dd_dir_name)),
+            'maxpeers': make_node_param('--maxpeers', self.max_peers),  # max peers in network
+            'geth_log_file': os.path.join(self.qdata_dir_name, self.dd_dir_name, self.logs_dir_name,
+                                          self.log_file_name),
             'unlock': '--unlock 0',  # only one account for now. So unlock first account.
-            'password': make_param('--password', self.passwords_file_name),  # should be part of QuorumNetwork as accounts are created there and so is this file
-            'networkid': make_param('--networkid', self.networkid),
-            'verbosity': make_param('--verbosity', 2),  # 5 is highest
+            'password': make_node_param('--password', self.passwords_file_name),
+            'networkid': make_node_param('--networkid', self.networkid),
+            'verbosity': make_node_param('--verbosity', 2),  # 5 is highest
 
             # RPC related
             'rpc': '--rpc',
-            'rpcaddr': make_param('--rpcaddr', self.rpcaddr),
-            'rpcport': make_param('--rpcport', self.rpcport),
-            'rpcapi': make_param('--rpcapi', 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum'),
+            'rpcaddr': make_node_param('--rpcaddr', self.rpcaddr),
+            'rpcport': make_node_param('--rpcport', self.rpcport),
+            'rpcapi': make_node_param('--rpcapi', 'admin,db,eth,debug,miner,net,shh,txpool,personal,web3,'
+                                                  'quorum'),
             'rpccorsdomain': '?',
 
             # network related
-            'port': make_param('--port', self.port),
+            'port': make_node_param('--port', self.port),
             'nodiscover': '--nodiscover',  # For private networks, all peer additions are manual.
             'permissioned': '?',
             'targetgaslimit': '?',
@@ -107,7 +114,6 @@ class Geth:
             'wsport': '?',
             'wsapi': '?',
             'wsorigins': '?',
-            # 'emitcheckpoints': '', part of istanbul. see quorum_cmd_line_options.txt
 
             # others
             'nat': '?',
@@ -135,6 +141,9 @@ class Geth:
     def generate_enode(self):
         bash_utils.generate_enode(self.nodekey_file)
 
+    def generate_ibftaddress_nodekey_enode(self):
+        return bash_utils.generate_ibftaddress_nodekey_enode(self.nodekey_file)
+
     def generate_nodekey_and_enode(self):
         return bash_utils.generate_nodekey_and_enode(self.nodekey_file)
 
@@ -150,9 +159,13 @@ class Geth:
         return self.build_config
 
     @property
+    def ibft_address(self):
+        return self._ibft_address
+
+    @property
     def enode_id_geth(self):
         return self._enode_id_geth
 
     @property
-    def node_key(self):
-        return self.nodekey
+    def nodekey(self):
+        return self._nodekey

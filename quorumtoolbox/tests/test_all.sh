@@ -1,60 +1,52 @@
 #!/usr/bin/env bash
 
-# Run in pipenv virtual env
+set -E
 
-set -u
-set -e
+cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
+all_tests=(
+	"test_constellation.py"
+	"test_raft.py"
+	"test_ibft.py"
+	"test_geth.py"
+	"test_quorum_node.py raft"
+	"test_quorum_node.py ibft"
+	"test_quorum_network.py raft"
+	"test_quorum_network.py ibft"
+)
+
+
+function handle_error {
+    local retval=$?
+    echo ":( Failed"
+    exit $retval
+}
+
+trap handle_error ERR
 
 cleardirs () {
     rm -r company1_q2_n* 2>>/dev/null
 }
 
 makedir () {
-    echo "Making directory company1_q2_n$1"
-    cp -r ../template_dir company1_q2_n$1
+    cp -r ../template_dir company1_q2_n"$1"
 }
 
-checkresult() {
-    if [ $1 -ne 0 ]
-    then
-        echo "FAILED"
-        exit
-    else
-        echo "" #success!
-    fi
-
+run_tests () {
+   tests=("$@")
+   for test in "${tests[@]}";
+      do
+		echo "Running ${test}"
+		makedir 0
+		makedir 1
+		python ${test}
+		cleardirs
+      done
 }
 
-
-echo "========================== STARTING ==========================="#
 makedir 999
 cleardirs
 
-makedir 0
-python3 test_constellation.py
-checkresult $?
-cleardirs
+run_tests "${all_tests[@]}"
 
-makedir 0
-python3 test_raft.py
-checkresult $?
-cleardirs
-
-makedir 0
-python3 test_geth.py
-checkresult $?
-cleardirs
-
-makedir 0
-python3 test_quorum_node.py
-checkresult $?
-cleardirs
-
-makedir 0
-makedir 1
-
-python3 test_quorum_network.py
-checkresult $?
-cleardirs
-
-echo "========================= FINISHED =============================="
+echo "+ Passed"
