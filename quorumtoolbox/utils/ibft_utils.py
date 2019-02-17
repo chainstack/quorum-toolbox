@@ -27,7 +27,7 @@ def join_existing_ibft_network(peers, enode_id_geth):
         # TODO need better logic. If a peer returns an invalid result, instead of breaking, try next peer.
         # TODO For ibft, perhaps its better to add new node to all peers since net.peerCount for new node only shows 1
         try:
-            result = requests.post(address, data=json.dumps(body).encode('utf-8'))
+            result = requests.post(address, json=body)
         except Exception:
             continue
         else:

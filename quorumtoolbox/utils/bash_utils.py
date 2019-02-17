@@ -22,7 +22,7 @@ def generate_constellation_key(key_name):
     Generate constellation key pair files. key_name is name of key pair to generate, which can include a path.
 
     Produces two files: .pub and .key.
-    Bash command that is executed: constellation-node --genratekeys=key_name
+    Bash command that is executed: constellation-node --generatekeys=key_name
     Currently there is no support to specify a password for locking the key files.
 
     :param key_name: Key pair name. e.g. node, temp/node etc.

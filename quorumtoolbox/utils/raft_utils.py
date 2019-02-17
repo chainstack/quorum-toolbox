@@ -26,7 +26,7 @@ def get_raft_joining_id(peers, enode_id):
 
         # TODO direct data=body dont seem to work for GO API. Why? something to do with " vs ' when representing string
         try:
-            res = requests.post(address, data=json.dumps(body).encode('utf-8'))
+            res = requests.post(address, json=body)
             raft_joining_id = json.loads(res.text)['result']
         except Exception:
             continue

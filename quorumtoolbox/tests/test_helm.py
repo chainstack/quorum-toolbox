@@ -324,7 +324,7 @@ ext_ip_initial = 'http://' + ext_ip_initial + ':8545'
 
 result = ''
 try:
-    result = requests.post(ext_ip_initial, data=json.dumps(body))
+    result = requests.post(ext_ip_initial, json=body)
 except Exception as e:
     print('Error while making RPC call ', e)
     exit()
