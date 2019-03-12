@@ -14,6 +14,14 @@ def config_check(fullstr, config_file):
     return closure_check
 
 
+def ptm_address_check(ptm_address):
+    regex = re.compile(r'^[a-zA-Z0-9/+=]{44}$')
+    result = regex.match(ptm_address)
+
+    if not result:
+        raise Exception('PTM address is of wrong format {0}'.format(ptm_address))
+
+
 constellation_params = {
     'other_nodes': ['http://127.0.0.1:9000/', 'http://10.11.11.11:9000/']
 }
@@ -71,6 +79,10 @@ def test_raft_quorum_node():
     if not result:
         raise Exception('Enode id is of wrong format {0}'.format(qn.enode_id))
     print('Enode id: ', qn.enode_id)
+
+    print('Checking ptm address...')
+    ptm_address_check(qn.ptm_address)
+    print('PTM Address: ', qn.ptm_address)
 
     config_file = qn.build_configuration['local']['config_file']
 
@@ -167,6 +179,10 @@ def test_ibft_quorum_node():
     if not result:
         raise Exception('Enode id is of wrong format {0}'.format(qn.enode_id))
     print('Enode id: ', qn.enode_id)
+
+    print('Checking ptm address...')
+    ptm_address_check(qn.ptm_address)
+    print('PTM Address: ', qn.ptm_address)
 
     config_file = qn.build_configuration['local']['config_file']
 

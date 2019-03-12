@@ -46,6 +46,7 @@ class QuorumNetwork:
         self._consensus_ids = []
         self._private_manager_peers = []
         self._private_manager_urls = []
+        self._private_manager_addresses = []
 
         geth_params = {} if geth_params is None else geth_params
         consensus_params = {} if consensus_params is None else consensus_params
@@ -97,7 +98,8 @@ class QuorumNetwork:
                 'ibft_addresses': self._ibft_addresses,
                 'consensus_ids': self._consensus_ids,
                 'private_manager_peers': self._private_manager_peers,
-                'private_manager_urls': self._private_manager_urls
+                'private_manager_urls': self._private_manager_urls,
+                'private_manager_addresses': self._private_manager_addresses
             }
         }
 
@@ -153,6 +155,7 @@ class QuorumNetwork:
         self._consensus_ids.append(quorum_node.consensus_id)
         self._private_manager_peers.append(quorum_node.ptm_peers)
         self._private_manager_urls.append(quorum_node.ptm_url)
+        self._private_manager_addresses.append(quorum_node.ptm_address)
 
     def write_static_nodes(self):
         for static_nodes_file in self.static_nodes_files:
@@ -231,3 +234,7 @@ class QuorumNetwork:
     @property
     def private_manager_urls(self):
         return self._private_manager_urls
+
+    @property
+    def private_manager_addresses(self):
+        return self._private_manager_addresses

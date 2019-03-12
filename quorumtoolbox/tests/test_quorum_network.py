@@ -152,6 +152,7 @@ genesis_files = qn.build_configuration['local']['genesis_files']
 enode_ids = qn.build_configuration['network']['enode_ids']
 accounts = qn.build_configuration['network']['accounts']
 ibft_addresses = qn.build_configuration['network']['ibft_addresses']
+ptm_addresses = qn.build_configuration['network']['private_manager_addresses']
 
 if node_utils.is_initial_node(node_options['node_state']) and len(static_nodes_files) != node_options[
     'no_of_nodes']:
@@ -173,6 +174,12 @@ if len(accounts) != node_options['no_of_nodes']:
     raise Exception(
         'Expected {0} number of accounts, '
         'found {1}'.format(node_options['no_of_nodes'], len(accounts)))
+
+if len(ptm_addresses) != node_options['no_of_nodes']:
+    raise Exception(
+        'Expected {0} number of PTM addresses,'
+        ' found {1}'.format(node_options['no_of_nodes'], len(ptm_addresses)))
+
 
 for static_node_file in static_nodes_files:
     with open(static_node_file) as fp:

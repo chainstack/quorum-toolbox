@@ -61,6 +61,7 @@ class CreateQuorumNode:
         self._ibft_addresses = self.qn.ibft_addresses
         self._ptm_peers = self.qn.private_manager_peers
         self._ptm_urls = self.qn.private_manager_urls
+        self._ptm_addresses = self.qn.private_manager_addresses
 
     @property
     def genesis_content(self):
@@ -85,6 +86,10 @@ class CreateQuorumNode:
     @property
     def ptm_url(self):
         return self._ptm_urls[0]
+
+    @property
+    def ptm_address(self):
+        return self._ptm_addresses[0]
 
     @property
     def ptm_peers(self):

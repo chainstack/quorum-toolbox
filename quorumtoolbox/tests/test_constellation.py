@@ -44,18 +44,29 @@ with open('constellation.config', 'r') as fp:
 
 print('Looking for constellation-node running at port {0}'.format(port))
 
-is_success = False
 
-for proc in psutil.process_iter():
-    if 'constellation-node' in proc.name() and proc.connections()[0].laddr[1] == 9000:
-        print('Found constellation-node running with pid {0}'.format(proc.pid))
-        print('\nShutting constellation')
-        proc.kill()
-        is_success = True
-        break
+def find_constellation_node():
+    for process in psutil.process_iter():
+        if 'constellation-node' == process.name() and \
+                process.connections() and \
+                process.connections()[0].laddr.port == 9000:
 
-if not is_success:
+            print('Found {0} running with pid {1}'.format(process.name(), process.pid))
+
+            return process
+
+    return None
+
+
+constellation_node_process = find_constellation_node()
+
+
+if not constellation_node_process:
     raise Exception('Unable to find constellation running')
+
+constellation_node_process.kill()
+
+print('Shutting constellation')
 
 os.chdir(curr_dir)
 

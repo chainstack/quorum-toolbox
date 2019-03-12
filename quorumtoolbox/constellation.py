@@ -17,12 +17,9 @@ class Constellation:
     launch_script_file_name = 'launch_constellation.sh'
 
     key_name_pfx = 'node'
-    arch_key_name_pfx = 'arch_node'
 
     pub_key_file_name = key_name_pfx + '.pub'
     pri_key_file_name = key_name_pfx + '.key'
-    arch_pub_key_file_name = arch_key_name_pfx + '.pub'
-    arch_pri_key_file_name = arch_key_name_pfx + '.key'
 
     def __init__(self,
                  context,
@@ -48,19 +45,14 @@ class Constellation:
 
         self.launch_script_file = os.path.join(self.base_dir, self.launch_script_file_name)
 
-        self.public_keys = []
-        self.private_keys = []
-        self.public_keys_contents = []
-        self.private_keys_contents = []
-
         self.make_keys()
-        self.set_keys()
 
-        for key_file in self.public_keys:
-            self.public_keys_contents.append(constellation_utils.read_constellation_key(key_file))
+        self.public_key = os.path.join(self.keys_dir, self.pub_key_file_name)
+        self.private_key = os.path.join(self.keys_dir, self.pri_key_file_name)
+        self.public_key_content = constellation_utils.read_constellation_key(self.public_key)
+        self.private_key_content = constellation_utils.read_constellation_key(self.private_key)
 
-        for key_file in self.private_keys:
-            self.private_keys_contents.append(constellation_utils.read_constellation_key(key_file))
+        self._ptm_address = self.public_key_content
 
         # configuration related to this class instance
         self.build_config = {
@@ -75,10 +67,10 @@ class Constellation:
                 'storage_dir': self.storage_dir
             },
             'keys': {
-                'public_keys': self.public_keys,
-                'private_keys': self.private_keys,
-                'public_keys_contents': self.public_keys_contents,
-                'private_keys_contents': self.private_keys_contents
+                'public_key': self.public_key,
+                'private_key': self.private_key,
+                'public_key_content': self.public_key_content,
+                'private_key_content': self.private_key_content
             }
         }
 
@@ -91,12 +83,9 @@ class Constellation:
             'othernodes': self._other_nodes,
 
             # relative to constellation_dir_name folder
-            'publickeys': [os.path.join(self.keys_dir_name, self.pub_key_file_name),
-                           os.path.join(self.keys_dir_name, self.arch_pub_key_file_name)],
-
+            'publickeys': [os.path.join(self.keys_dir_name, self.pub_key_file_name)],
             # relative to constellation_dir_name folder
-            'privatekeys': [os.path.join(self.keys_dir_name, self.pri_key_file_name),
-                            os.path.join(self.keys_dir_name, self.arch_pri_key_file_name)],
+            'privatekeys': [os.path.join(self.keys_dir_name, self.pri_key_file_name)],
 
             'storage': self.storage_dir_name
         }
@@ -144,6 +133,10 @@ class Constellation:
     def ptm_url(self):
         return self._url
 
+    @property
+    def ptm_address(self):
+        return self._ptm_address
+
     def write_launch_configuration_file(self):
         templating.template_substitute(self.config_file, self.launch_config)
 
@@ -161,13 +154,6 @@ class Constellation:
 
     def make_keys(self):
         constellation_utils.make_constellation_key(self.key_name_pfx, self.keys_dir)
-        constellation_utils.make_constellation_key(self.arch_key_name_pfx, self.keys_dir)
-
-    def set_keys(self):
-        self.public_keys.append(os.path.join(self.keys_dir, self.pub_key_file_name))
-        self.private_keys.append(os.path.join(self.keys_dir, self.pri_key_file_name))
-        self.public_keys.append(os.path.join(self.keys_dir, self.arch_pub_key_file_name))
-        self.private_keys.append(os.path.join(self.keys_dir, self.arch_pri_key_file_name))
 
     def get_ext_ip(self):
         pass

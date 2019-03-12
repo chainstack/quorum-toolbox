@@ -105,3 +105,7 @@ class QuorumNode:
     @property
     def ptm_url(self):
         return self.private_manager.ptm_url
+
+    @property
+    def ptm_address(self):
+        return self.private_manager.ptm_address

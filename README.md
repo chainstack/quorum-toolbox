@@ -20,6 +20,5 @@ Clone repo, cd to quorum-toolbox and run `python setup.py develop`.
 ## Testing
 
 ```
-docker build -t quorumtoolbox
-docker run quorumtoolbox
+docker-compose up
 ```

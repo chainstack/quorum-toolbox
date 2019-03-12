@@ -219,8 +219,11 @@ node_params = {
 
 qn = CreateQuorumNode(node_params)
 
-print('Created artifacts in folder: {0}. For your info: 1. Network id: {1} 2. Constellation Url: {2}'
-      .format(context, qn.networkid, qn.ptm_url))
+print('Created artifacts in folder: {0}. Note the following:\n'
+      '1. Network id: {1}\n'
+      '2. Constellation Url: {2}\n'
+      '3. PTM address: {3}'
+      .format(context, qn.networkid, qn.ptm_url, qn.ptm_address))
 
 if 'ibft' in node_state:
     print('IBFT address for the node is {0}. (Used for IBFT networks only, for voting proposals).\n'.format(
@@ -277,8 +280,14 @@ while True:
     qn = CreateQuorumNode(node_params, network_params)
 
     print('\nCreated artifacts for new node')
-    print('Created artifacts in folder: {0}. For your info: 1. Join id: {1} 2. Constellation Url: {2} \
-3. Constellation peer url: {3}'.format(context, qn.consensus_id, qn.ptm_url, qn.ptm_peers))
+
+    print('Created artifacts in folder: {0}. Note the following:\n'
+          '1. Join id: {1}\n'
+          '2. Constellation Url: {2}\n'
+          '3. Constellation other nodes url: {3}\n'
+          '4. PTM address: {4}'
+          .format(context, qn.consensus_id, qn.ptm_url, qn.ptm_peers, qn.ptm_address))
+
 
     if 'ibft' in node_state:
         print('IBFT address for the node is {0}. (Used for IBFT networks only, for voting proposals).\n'.format(
