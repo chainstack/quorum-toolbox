@@ -16,6 +16,9 @@ def run_cmd(cmd):
         'stderr': sh_output_to_str(result.stderr)
     }
 
+def generate_tessera_key(key_name):
+    # TODO
+    pass
 
 def generate_constellation_key(key_name):
     """
