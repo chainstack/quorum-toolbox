@@ -16,9 +16,14 @@ def run_cmd(cmd):
         'stderr': sh_output_to_str(result.stderr)
     }
 
+
 def generate_tessera_key(key_name):
-    # TODO
-    pass
+    # at pw prompt, enter null in stdin.
+    cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera', '-keygen', '-filename', key_name, _in='\n')
+    result = run_cmd(cmd)
+
+    return result['stdout']
+
 
 def generate_constellation_key(key_name):
     """
@@ -162,7 +167,7 @@ def make_quorum_node_launch_params(list_of_kv):
 
 
 def handle_duplicate_launch_params(key, value1, value2):
-    # e.g. --rpcapi raft and --rpcapi admin,db,eth will be contantenated to --rpcapi raft,admin,db,eth
+    # e.g. --rpcapi raft and --rpcapi admin,db,eth will be concatenated to --rpcapi raft,admin,db,eth
     if key == 'rpcapi':
         return ','.join([value1, value2.replace('--rpcapi', '').replace(' ', '')])
 

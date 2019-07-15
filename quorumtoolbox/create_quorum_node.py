@@ -19,6 +19,7 @@ class CreateQuorumNode:
         self.context = node_params['context']
         self.address = node_params['address']
         self.node_state = node_params['node_state']
+        self.private_manager = node_params.get('private_manager', 'constellation')  # bk compatible
         self._networkid = random.randint(100, 100000) if 'networkid' not in node_params else node_params['networkid']
 
         self.geth_params = {
@@ -39,7 +40,7 @@ class CreateQuorumNode:
                 'peers': [network_params['other_node_public_ip']]
             }
             self.ptm_params = {
-                'other_nodes': [network_params['other_constellation_public_ip']]
+                'other_nodes': [network_params['other_ptm_public_ip']]
             }
 
         self.create_context()
@@ -50,6 +51,7 @@ class CreateQuorumNode:
                                 [self.address],
                                 ['0.0.0.0'],
                                 self.node_state,
+                                private_manager=self.private_manager,
                                 genesis_content=self.genesis,
                                 geth_params=self.geth_params,
                                 consensus_params=self.consensus_params,
@@ -118,10 +120,14 @@ class CreateQuorumNode:
         if not node_params.get('address'):
             raise Exception('Error, address parameter not provided')
 
-        node_state = node_params.get('node_state')
+        node_state = node_params.get('node_state', None)
+        private_manager = node_params.get('private_manager', None)
 
         if not node_state or not node_utils.is_raft_or_istanbul_node(node_state):
             raise Exception('Error, node_state parameter not provided, or it is wrong')
+
+        if not private_manager or not node_utils.is_constellation_or_tessera_node(private_manager):
+            raise Exception('Error, private_maanger parameter not provided, or it is wrong')
 
     def sanity_checks_new_node(self, network_params):
         if not network_params.get('genesis_content'):
@@ -130,5 +136,5 @@ class CreateQuorumNode:
         if not network_params.get('other_node_public_ip'):
             raise Exception('Error, other_node_public_ip parameter not provided')
 
-        if not network_params.get('other_constellation_public_ip'):
-            raise Exception('Error, other_constellation_public_ip parameter not provided')
+        if not network_params.get('other_ptm_public_ip'):
+            raise Exception('Error, other_ptm_public_ip parameter not provided')

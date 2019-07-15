@@ -23,6 +23,7 @@ class QuorumNetwork:
                  addresses,
                  rpcaddrs,
                  node_state,
+                 private_manager='constellation',
                  genesis_content='',
                  geth_params=None,
                  consensus_params=None,
@@ -31,6 +32,7 @@ class QuorumNetwork:
         self.no_of_nodes = no_of_nodes
         self._networkid = networkid
         self.node_state = node_state
+        self.private_manager = private_manager
         self.quorum_nodes = []
 
         # genesis content will be (created and) written to genesis.json of all nodes
@@ -39,6 +41,7 @@ class QuorumNetwork:
         self.dd_dirs = []
         self.static_nodes_files = []
         self.genesis_files = []
+        self.genesis_template_file = ''
 
         self._enode_ids = []
         self._ibft_addresses = []  # ibft address is always returned by geth. Use it if ibft consensus is used.
@@ -53,6 +56,7 @@ class QuorumNetwork:
         private_manager_params = {} if private_manager_params is None else private_manager_params
 
         self.is_raft_or_istanbul_node()  # raft or istanbul nodes are supported
+        self.is_constellation_or_tessera_node()  # constellation or tessera ptms are supported
         self.set_genesis_template_filename()  # choose the right genesis file
         self.is_genesis_content_needed()  # genesis must be given for new nodes, will be created for initial nodes
 
@@ -72,6 +76,7 @@ class QuorumNetwork:
                                   address,
                                   rpcaddr,
                                   node_state,
+                                  private_manager,
                                   geth_params,
                                   consensus_params,
                                   private_manager_params
@@ -119,6 +124,12 @@ class QuorumNetwork:
         else:
             raise Exception('Unknown node type: {0}'.format(self.node_state))
 
+    def is_constellation_or_tessera_node(self):
+        if node_utils.is_constellation_or_tessera_node(self.private_manager):
+            return True
+        else:
+            raise Exception('Unknown ptm type: {0}'.format(self.private_manager))
+
     def is_initial_node(self):
         return node_utils.is_initial_node(self.node_state)
 
@@ -137,6 +148,7 @@ class QuorumNetwork:
                          address,
                          rpcaddr,
                          node_state,
+                         private_manager,
                          geth_params,
                          consensus_params,
                          private_manager_params):
@@ -145,6 +157,7 @@ class QuorumNetwork:
                                  rpcaddr,
                                  networkid,
                                  node_state,
+                                 private_manager=private_manager,
                                  geth_params=geth_params,
                                  consensus_params=consensus_params,
                                  private_manager_params=private_manager_params)

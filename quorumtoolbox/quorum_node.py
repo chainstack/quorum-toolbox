@@ -1,6 +1,7 @@
 import os
 
 from quorumtoolbox.constellation import Constellation
+from quorumtoolbox.Tessera import Tessera
 from quorumtoolbox.geth import Geth
 from quorumtoolbox.ibft import Ibft
 from quorumtoolbox.raft import Raft
@@ -39,6 +40,8 @@ class QuorumNode:
 
         if private_manager.lower() == 'constellation':
             self.private_manager = Constellation(context, address, **private_manager_params)
+        else:
+            self.private_manger = Tessera(context, address, **private_manager_params)
 
         # make the node's enode_id depending on consensus
         self._enode_id = self.make_enode_id_from_geth() if node_utils.is_raft_node(self.node_state) else \
