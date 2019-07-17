@@ -100,7 +100,7 @@ class Constellation:
 
         }
 
-        # to be launched from within the constellation_dir_name. e.g nohup $binary $config_file_name 2>> $log_file
+        # to be launched from within the constellation_dir_name. e.g $binary $config_file_name 2>> $log_file
         self.launch_cmd_line = templating.template_substitute(
             '$constellation_binary $constellation_config_file 2>> $constellation_log_file',
             self.launch_params

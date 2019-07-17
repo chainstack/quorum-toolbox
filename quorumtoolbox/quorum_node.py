@@ -1,7 +1,7 @@
 import os
 
 from quorumtoolbox.constellation import Constellation
-from quorumtoolbox.Tessera import Tessera
+from quorumtoolbox.tessera import Tessera
 from quorumtoolbox.geth import Geth
 from quorumtoolbox.ibft import Ibft
 from quorumtoolbox.raft import Raft

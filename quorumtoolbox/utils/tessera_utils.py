@@ -14,15 +14,14 @@ def read_tessera_key(key_name, store_dir=""):
         return fp.read()
 
 
-# Same?? TLS?
 def make_url(address, port):
     r = re.compile(r'^https://')
     if r.match(address) is None:
         address = 'https://' + address
 
-    if address[-1] == '/':  # must end in /, if not error on launching constellation
-        address = address[:-1] + ':' + str(port) + '/'
+    if address[-1] == '/':
+        address = address[:-1] + ':' + str(port)
     else:
-        address = address + ':' + str(port) + '/'
+        address = address + ':' + str(port)
 
     return address

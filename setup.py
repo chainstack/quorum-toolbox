@@ -11,7 +11,7 @@ def read(fname):
 
 setup(name='quorumtoolbox',
       version='2.1.0',
-      description='Quorum-toolbox (supports Raft and Ibft)',
+      description='Quorum-toolbox (supports Raft and Ibft, Constellation and Tessera)',
       long_description=read('README.md'),
       packages=find_packages(),
       include_package_data=True,

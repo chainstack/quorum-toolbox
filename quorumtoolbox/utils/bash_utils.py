@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from time import sleep
 
@@ -19,7 +20,15 @@ def run_cmd(cmd):
 
 def generate_tessera_key(key_name):
     # at pw prompt, enter null in stdin.
-    cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera', '-keygen', '-filename', key_name, _in='\n')
+    # tessera keygen doesn't seem to accept relative paths
+    file_name = os.path.split(key_name)[1]
+    file_loc = os.path.split(key_name)[0] if os.path.split(key_name)[0] != '' else None
+
+    cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera',
+                                  '-keygen',
+                                  '-filename', file_name,
+                                  _cwd=file_loc,
+                                  _in='\n')
     result = run_cmd(cmd)
 
     return result['stdout']

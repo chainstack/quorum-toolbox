@@ -1,14 +1,12 @@
 import os
 import json
 
-from utils import tessera_utils
-from utils import templating
+from quorumtoolbox.utils import tessera_utils, templating
 
 
 class Tessera:
     tessera_dir_name = "tessera"
     keys_dir_name = "keys"
-    logs_dir_name = "logs"
 
     socket_file_name = "tessera.ipc"
     config_file_name = "tessera.config"
@@ -28,7 +26,7 @@ class Tessera:
         self.port = port
 
         other_nodes = [] if other_nodes is None else other_nodes
-        self._other_nodes = [constellation_utils.make_url(node, 9000) for node in other_nodes]
+        self._other_nodes = [tessera_utils.make_url(node, 9000) for node in other_nodes]
 
         self.url = tessera_utils.make_url(self.address, self.port)
 
@@ -78,10 +76,10 @@ class Tessera:
             'socket': self.socket_file_name,
 
             # relative to tessera_dir_name folder
-            'publickeys': [os.path.join(self.keys_dir_name, self.pub_key_file_name)],
+            'publickeys': os.path.join(self.keys_dir_name, self.pub_key_file_name),
 
             # relative to tessera_dir_name folder
-            'privatekeys': [os.path.join(self.keys_dir_name, self.pri_key_file_name)],
+            'privatekeys': os.path.join(self.keys_dir_name, self.pri_key_file_name),
         }
 
         self.write_launch_configuration_file()
