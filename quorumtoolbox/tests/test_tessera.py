@@ -49,7 +49,7 @@ print('Launching tessera...')
 curr_dir = os.path.abspath(os.curdir)
 os.chdir(os.path.join(curr_dir, context, 'tessera'))
 
-cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera', '-configfile', 'tessera.config')
+cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera', '-configfile', 'tessera.json')
 for other_node in other_nodes:
     cmd = cmd.bake('--peer.url', other_node)
 
@@ -60,7 +60,7 @@ print('\nChecking...')
 sleep(10)  # give some time for tessera to start up
 
 port = ''
-with open('tessera.config', 'r') as fp:
+with open('tessera.json', 'r') as fp:
     port = json.loads(fp.read())["serverConfigs"][1]["serverAddress"].split(":")[2]
 
 print('Looking for tessera running at port {0}'.format(port))

@@ -2,14 +2,14 @@
     "useWhiteList": false,
     "jdbc": {
         "username": "cs",
-        "url": "jdbc:h2:/tessera/db;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
+        "url": "jdbc:h2:/run-quorum/tessera/db;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0",
         "autoCreateTables": true
     },
     "serverConfigs":[
         {
             "app":"Q2T",
             "enabled": true,
-            "serverAddress":"unix:/tessera/${socket}",
+            "serverAddress":"unix:/run-quorum/tessera/tessera.ipc",
             "communicationType" : "REST"
         },
         {

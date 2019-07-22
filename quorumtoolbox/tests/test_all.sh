@@ -6,6 +6,7 @@ cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 all_tests=(
 	"test_constellation.py"
+	"test_tessera.py"
 	"test_raft.py"
 	"test_ibft.py"
 	"test_geth.py"
@@ -39,7 +40,7 @@ run_tests () {
 		echo "Running ${test}"
 		makedir 0
 		makedir 1
-		python ${test}
+		python3 ${test}
 		cleardirs
       done
 }

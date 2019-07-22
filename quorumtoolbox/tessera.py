@@ -8,8 +8,7 @@ class Tessera:
     tessera_dir_name = "tessera"
     keys_dir_name = "keys"
 
-    socket_file_name = "tessera.ipc"
-    config_file_name = "tessera.config"
+    json_file_name = "tessera.json"
 
     key_name_pfx = "node"
 
@@ -33,8 +32,7 @@ class Tessera:
         self.base_dir = os.path.join(context, self.tessera_dir_name)
         self.keys_dir = os.path.join(self.base_dir, self.keys_dir_name)
 
-        self.config_file = os.path.join(self.base_dir, self.config_file_name)
-        self.socket_file = os.path.join(self.base_dir, self.socket_file_name)
+        self.json_file = os.path.join(self.base_dir, self.json_file_name)
 
         self.public_keys = []
         self.private_keys = []
@@ -58,9 +56,6 @@ class Tessera:
                 'port': self.port,
                 'othernodes': self._other_nodes
             },
-            'local': {
-                'ipc': self.socket_file,
-            },
             'keys': {
                 'public_keys': self.public_keys,
                 'private_keys': self.private_keys,
@@ -73,7 +68,6 @@ class Tessera:
         # to be launched from within the tessera_dir_name
         self.launch_config = {
             'url': self.url,
-            'socket': self.socket_file_name,
 
             # relative to tessera_dir_name folder
             'publickeys': os.path.join(self.keys_dir_name, self.pub_key_file_name),
@@ -86,8 +80,7 @@ class Tessera:
 
         self.launch_params = {
             'tessera_binary': 'tessera',
-            'tessera_config_file': self.config_file_name,
-            'tessera_ipc_file': self.socket_file_name,
+            'tessera_json_file': self.json_file_name,
             'othernodes': self._other_nodes,
         }
 
@@ -108,7 +101,7 @@ class Tessera:
         return self._other_nodes
 
     def write_launch_configuration_file(self):
-        templating.template_substitute(self.config_file, self.launch_config)
+        templating.template_substitute(self.json_file, self.launch_config)
 
     def make_keys(self):
         tessera_utils.make_tessera_key(self.key_name_pfx, self.keys_dir)

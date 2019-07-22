@@ -49,7 +49,7 @@ def find_constellation_node():
     for process in psutil.process_iter():
         if 'constellation-node' == process.name() and \
                 process.connections() and \
-                process.connections()[0].laddr.port == port:
+                process.connections()[0].laddr.port == int(port):
 
             print('Found {0} running with pid {1}'.format(process.name(), process.pid))
 
