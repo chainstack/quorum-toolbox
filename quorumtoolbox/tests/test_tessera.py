@@ -49,7 +49,8 @@ print('Launching tessera...')
 curr_dir = os.path.abspath(os.curdir)
 os.chdir(os.path.join(curr_dir, context, 'tessera'))
 
-cmd = sh.Command('java').bake('-jar', '/usr/local/bin/tessera', '-configfile', 'tessera.json')
+bin = os.path.join(os.environ['TESSERA_LOC'], 'tessera')
+cmd = sh.Command('java').bake('-jar', bin, '-configfile', 'tessera.json')
 for other_node in other_nodes:
     cmd = cmd.bake('--peer.url', other_node)
 

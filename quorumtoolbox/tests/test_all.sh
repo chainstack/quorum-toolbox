@@ -40,7 +40,7 @@ run_tests () {
 		echo "Running ${test}"
 		makedir 0
 		makedir 1
-		python3 ${test}
+		python ${test}
 		cleardirs
       done
 }
