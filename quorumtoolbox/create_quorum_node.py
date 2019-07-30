@@ -19,7 +19,7 @@ class CreateQuorumNode:
         self.context = node_params['context']
         self.address = node_params['address']
         self.node_state = node_params['node_state']
-        self.private_manager = node_params.get('private_manager', 'constellation')  # bk compatible
+        self.private_manager = node_params.get('private_manager', 'constellation')
         self._networkid = random.randint(100, 100000) if 'networkid' not in node_params else node_params['networkid']
 
         self.geth_params = {
@@ -127,7 +127,7 @@ class CreateQuorumNode:
             raise Exception('Error, node_state parameter not provided, or it is wrong')
 
         if not private_manager or not node_utils.is_constellation_or_tessera_node(private_manager):
-            raise Exception('Error, private_maanger parameter not provided, or it is wrong')
+            raise Exception('Error, private_manager parameter not provided, or it is wrong')
 
     def sanity_checks_new_node(self, network_params):
         if not network_params.get('genesis_content'):

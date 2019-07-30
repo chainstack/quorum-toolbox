@@ -172,6 +172,7 @@ check_requisites()
 
 helm_charts = sys.argv[1]
 consensus = sys.argv[3] if len(sys.argv) == 4 else ''
+private_manager = 'constellation'
 target_number_of_nodes = 5 if int(sys.argv[2]) > 5 else int(sys.argv[2])
 
 print('-----------------------------------------------------------------------')
@@ -214,7 +215,8 @@ node_state = 'initial' + '_' + consensus if consensus else 'initial'
 node_params = {
     'context': context,
     'address': address,
-    'node_state': node_state
+    'node_state': node_state,
+    'private_manager': private_manager
 }
 
 qn = CreateQuorumNode(node_params)
@@ -268,13 +270,14 @@ while True:
         'context': context,
         'address': new_address,
         'node_state': node_state,
-        'networkid': networkid
+        'networkid': networkid,
+        'private_manager': private_manager
     }
 
     network_params = {
         'genesis_content': genesis_content,
         'other_node_public_ip': ext_ip_initial,
-        'other_constellation_public_ip': ext_ip_initial
+        'other_ptm_public_ip': ext_ip_initial
     }
 
     qn = CreateQuorumNode(node_params, network_params)
