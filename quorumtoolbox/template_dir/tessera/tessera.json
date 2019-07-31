@@ -19,23 +19,26 @@
             "sslConfig": {
                 "tls": "STRICT",
                 "generateKeyStoreIfNotExisted": true,
-                "serverKeyStore": "server-keystore",
+                "serverKeyStore": "/run-quorum/tessera/server-keystore",
                 "serverKeyStorePassword": "",
                 "serverTrustMode": "TOFU",
-                "knownClientsFile": "knownClients",
-                "clientKeyStore": "client-keystore",
+                "knownClientsFile": "/run-quorum/tessera/knownClients",
+                "clientKeyStore": "/run-quorum/tessera/client-keystore",
                 "clientKeyStorePassword": "",
                 "clientTrustMode": "TOFU",
-                "knownServersFile": "knownServers"
+                "knownServersFile": "/run-quorum/tessera/knownServers"
             },
             "communicationType" : "REST"
         }
     ],
+    "peer":[
+
+    ],
     "keys": {
         "keyData": [
             {
-                "privateKeyPath": "${privatekeys}",
-                "publicKeyPath": "${publickeys}"
+                "privateKeyPath": "/run-quorum/tessera/${privatekeys}",
+                "publicKeyPath": "/run-quorum/tessera/${publickeys}"
             }
         ]
     }

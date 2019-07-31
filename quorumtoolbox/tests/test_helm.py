@@ -172,7 +172,7 @@ check_requisites()
 
 helm_charts = sys.argv[1]
 consensus = sys.argv[3] if len(sys.argv) == 4 else ''
-private_manager = 'constellation'
+private_manager = 'tessera'
 target_number_of_nodes = 5 if int(sys.argv[2]) > 5 else int(sys.argv[2])
 
 print('-----------------------------------------------------------------------')
