@@ -13,11 +13,11 @@ def read_tessera_key(key_name, store_dir=""):
     with open(os.path.join(store_dir, key_name), "r") as fp:
         return fp.read()
 
-
+# change to https if SSL enabled in tessera.json
 def make_url(address, port):
-    r = re.compile(r'^https://')
+    r = re.compile(r'^http://')
     if r.match(address) is None:
-        address = 'https://' + address
+        address = 'http://' + address
 
     if address[-1] == '/':
         address = address[:-1] + ':' + str(port)

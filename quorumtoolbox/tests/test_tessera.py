@@ -41,7 +41,7 @@ def change_test_paths(config_file):
 
     inp['jdbc']['url'] = 'jdbc:h2:' + os.path.join(test_path, 'db') + ';MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=0'
     inp['serverConfigs'][0]['serverAddress'] = 'unix:' + os.path.join(test_path, 'tessera.ipc')
-    #inp['serverConfigs'][0]['serverAddress'] = 'unix:' + os.path.join('/short/path', 'tessera.ipc')
+    #inp['serverConfigs'][0]['serverAddress'] = 'unix:' + os.path.join('/home/user/Temp', 'tessera.ipc')
     inp['serverConfigs'][1]['sslConfig']['serverKeyStore'] = os.path.join(test_path, 'server-keystore')
     inp['serverConfigs'][1]['sslConfig']['knownClientsFile'] = os.path.join(test_path, 'knownClients')
     inp['serverConfigs'][1]['sslConfig']['clientKeyStore'] = os.path.join(test_path, 'client-keystore')
@@ -61,9 +61,10 @@ def check_ipc_len(ipc):
 print('====== START TESSERA TEST =======')
 context = 'company1_q2_n0'
 t_port = 9000
-other_nodes = ['https://localhost:9001']
 
-cn = Tessera(context, 'https://localhost', port=t_port, other_nodes=other_nodes)
+# change to https if SSL enabled for tessera P2P in tessera.json
+other_nodes = ['http://localhost:9001']
+cn = Tessera(context, 'http://localhost', port=t_port, other_nodes=other_nodes)
 
 print('Created all artifacts and keys need for tessera node. Ready to be launched.')
 

@@ -17,7 +17,7 @@
             "enabled": true,
             "serverAddress":"${url}",
             "sslConfig": {
-                "tls": "STRICT",
+                "tls": "OFF",
                 "generateKeyStoreIfNotExisted": true,
                 "serverKeyStore": "/run-quorum/tessera/server-keystore",
                 "serverKeyStorePassword": "",
