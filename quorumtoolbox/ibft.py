@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 
 from quorumtoolbox.utils import ibft_utils

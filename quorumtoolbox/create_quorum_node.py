@@ -1,3 +1,4 @@
+# coding=utf-8
 import os
 import random
 
@@ -113,7 +114,8 @@ class CreateQuorumNode:
 
         # no further checks for initial node
 
-    def sanity_checks_common(self, node_params):
+    @staticmethod
+    def sanity_checks_common(node_params):
         if not node_params.get('context'):
             raise Exception('Error, context parameter not provided')
 
@@ -129,7 +131,8 @@ class CreateQuorumNode:
         if not private_manager or not node_utils.is_constellation_or_tessera_node(private_manager):
             raise Exception('Error, private_manager parameter not provided, or it is wrong')
 
-    def sanity_checks_new_node(self, network_params):
+    @staticmethod
+    def sanity_checks_new_node(network_params):
         if not network_params.get('genesis_content'):
             raise Exception('Error, genesis_content parameter not provided')
 

@@ -1,3 +1,4 @@
+# coding=utf-8
 from quorumtoolbox import ibft
 from quorumtoolbox.utils.node_utils import make_node_param
 

@@ -1,3 +1,4 @@
+# coding=utf-8
 import os
 
 from quorumtoolbox.utils import bash_utils, enode_utils

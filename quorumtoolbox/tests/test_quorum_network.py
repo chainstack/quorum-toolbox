@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import sys
 
@@ -154,8 +155,7 @@ accounts = qn.build_configuration['network']['accounts']
 ibft_addresses = qn.build_configuration['network']['ibft_addresses']
 ptm_addresses = qn.build_configuration['network']['private_manager_addresses']
 
-if node_utils.is_initial_node(node_options['node_state']) and len(static_nodes_files) != node_options[
-    'no_of_nodes']:
+if node_utils.is_initial_node(node_options['node_state']) and len(static_nodes_files) != node_options['no_of_nodes']:
     raise Exception(
         'Expected {0} number of static nodes file,'
         ' found {1}'.format(node_options['no_of_nodes'], len(static_nodes_files)))
@@ -179,7 +179,6 @@ if len(ptm_addresses) != node_options['no_of_nodes']:
     raise Exception(
         'Expected {0} number of PTM addresses,'
         ' found {1}'.format(node_options['no_of_nodes'], len(ptm_addresses)))
-
 
 for static_node_file in static_nodes_files:
     with open(static_node_file) as fp:
@@ -217,8 +216,7 @@ for genesis_file in genesis_files:
             for account in accounts:
                 if account not in accounts_balances:
                     raise Exception('Unable to find account {0} in list of account '
-                                    '{1} in genesis file {2}'.format(
-                        account, accounts_balances, genesis_file))
+                                    '{1} in genesis file {2}'.format(account, accounts_balances, genesis_file))
 
             genesis_content_f.pop('alloc')
 

@@ -1,4 +1,4 @@
-# Why isint this file inside /utils?
+# coding=utf-8
 import json
 import random
 import re
@@ -24,7 +24,7 @@ def get_raft_joining_id(peers, enode_id):
             'id': random.randint(1, 1000000)
         }
 
-        # TODO direct data=body dont seem to work for GO API. Why? something to do with " vs ' when representing string
+        # TODO direct data=body don't seem to work for GO API. Why? something to do with " vs ' when representing string
         try:
             res = requests.post(address, json=body)
             raft_joining_id = json.loads(res.text)['result']
@@ -35,7 +35,7 @@ def get_raft_joining_id(peers, enode_id):
 
     if raft_joining_id is None:
         raise Exception('Tried all peers...unable to get raft joining id.')
-        # TODO: Need better error propogation as this step is crucial
+        # TODO: Need better error propagation as this step is crucial
 
     print('Received Raft Join Id {0} for {1}'.format(raft_joining_id, enode_id))
     return raft_joining_id  # An integer

@@ -1,3 +1,4 @@
+# coding=utf-8
 import os
 import re
 
@@ -12,6 +13,7 @@ def make_tessera_key(key_name, store_dir=""):
 def read_tessera_key(key_name, store_dir=""):
     with open(os.path.join(store_dir, key_name), "r") as fp:
         return fp.read()
+
 
 # change to https if SSL enabled in tessera.json
 def make_url(address, port):

@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 This script creates Quorum nodes of the following types:
 1. RAFT

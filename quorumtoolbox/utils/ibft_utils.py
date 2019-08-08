@@ -1,4 +1,4 @@
-import json
+# coding=utf-8
 import random
 import re
 
@@ -23,7 +23,7 @@ def join_existing_ibft_network(peers, enode_id_geth):
             'id': random.randint(1, 1000000)
         }
 
-        # TODO direct data=body dont seem to work for GO API. Why? something to do with " vs ' when representing string
+        # TODO direct data=body don't seem to work for GO API. Why? something to do with " vs ' when representing string
         # TODO need better logic. If a peer returns an invalid result, instead of breaking, try next peer.
         # TODO For ibft, perhaps its better to add new node to all peers since net.peerCount for new node only shows 1
         try:

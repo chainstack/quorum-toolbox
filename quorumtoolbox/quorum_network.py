@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import os
 import pathlib
@@ -205,7 +206,8 @@ class QuorumNetwork:
         else:
             return self.create_ibft_extra_data()
 
-    def create_raft_extra_data(self):
+    @staticmethod
+    def create_raft_extra_data():
         # dummy for raft
         return '0x0000000000000000000000000000000000000000000000000000000000000000'
 
