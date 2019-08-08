@@ -10,7 +10,7 @@ def read(fname):
 
 
 setup(name='quorumtoolbox',
-      version='2.1.0',
+      version='2.2.1',
       description='Quorum-toolbox (supports Raft and Ibft)',
       long_description=read('README.md'),
       packages=find_packages(),
@@ -19,5 +19,6 @@ setup(name='quorumtoolbox',
           'requests>=2.20.0',
           'sh>=1.12.14',
           'psutil>=5.4.8',
+          'furl>=2.0.0',
       ],
       )

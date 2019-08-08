@@ -1,15 +1,13 @@
-# Why isint this file inside /utils?
 import json
 import random
-import re
-
 import requests
 
+from quorumtoolbox.utils.common import make_url
 
-# TODO: any existing RPC library available, instead of ROW?
+
 def get_raft_joining_id(peers, enode_id):
     if not peers:
-        raise Exception('Need to obtain raft joining id, but peer list is empty!')
+        raise ValueError('RAFT peer list is empty')
 
     raft_joining_id = None
 
@@ -24,36 +22,15 @@ def get_raft_joining_id(peers, enode_id):
             'id': random.randint(1, 1000000)
         }
 
-        # TODO direct data=body dont seem to work for GO API. Why? something to do with " vs ' when representing string
         try:
             res = requests.post(address, json=body)
             raft_joining_id = json.loads(res.text)['result']
-        except Exception:
-            continue
-        else:
-            break  # break on getting first valid raft id from network
+            break
+        except Exception as e:
+            print(e)
 
-    if raft_joining_id is None:
+    if not raft_joining_id:
         raise Exception('Tried all peers...unable to get raft joining id.')
-        # TODO: Need better error propogation as this step is crucial
 
     print('Received Raft Join Id {0} for {1}'.format(raft_joining_id, enode_id))
-    return raft_joining_id  # An integer
-
-
-# TODO: 8545, the default geth RPC port, must come from some config file.
-def make_url(address):
-    r = re.compile(r'^http://')
-    if r.match(address) is None:
-        address = 'http://' + address
-
-    # e.g. :9000 or :9000/, @ end of address
-    r = re.compile(r':[0-9]+/?$')
-
-    if r.match(address) is None:
-        if address[-1] == '/':
-            address = address[:-1] + ':' + '8545' + '/'
-        else:
-            address = address + ':' + '8545' + '/'
-
-    return address
+    return raft_joining_id
