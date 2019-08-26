@@ -1,6 +1,5 @@
 import json
 
-from quorumtoolbox.utils import ibft_utils
 from quorumtoolbox.utils.node_utils import make_node_param
 
 
@@ -68,7 +67,8 @@ class Ibft:
         return self.launch_params
 
     def join_existing_ibft_network(self):
-        ibft_utils.join_existing_ibft_network(self.peers, self.enode_id_geth)
+        # moved to orchestrator
+        return
 
     def __str__(self):
         return json.dumps(self.build_config)

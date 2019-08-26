@@ -1,7 +1,7 @@
 import json
 import os
 
-from quorumtoolbox.utils import raft_utils, templating
+from quorumtoolbox.utils import templating
 from quorumtoolbox.utils.enode_utils import make_enode_id2
 from quorumtoolbox.utils.node_utils import make_node_param
 
@@ -96,7 +96,9 @@ class Raft:
         return self.launch_params
 
     def get_raft_id(self):
-        return self.get_raft_joining_id()
+        # moved to orchestrator
+        # mocked return
+        return 0
 
     def write_raft_id(self):
         if self._raft_id is not None:

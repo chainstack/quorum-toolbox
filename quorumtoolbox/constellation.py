@@ -31,9 +31,9 @@ class Constellation:
         self.port = port
 
         other_nodes = [] if other_nodes is None else other_nodes
-        self._other_nodes = [constellation_utils.make_url(node, 9000) for node in other_nodes]
+        self._other_nodes = ''  # moved to orchestrator
 
-        self._url = constellation_utils.make_url(self.address, self.port)  # TODO: Need a more robust make_url
+        self._url = ''  # moved to orchestrator
 
         self.base_dir = os.path.join(context, self.constellation_dir_name)
         self.storage_dir = os.path.join(self.base_dir, self.storage_dir_name)
