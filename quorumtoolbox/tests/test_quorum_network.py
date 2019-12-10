@@ -40,12 +40,14 @@ node_options = {
 genesis_params = {
     'coinbase': '0x0000000000000000000000000000000000000000',
     'config': {
-        'byzantiumBlock': 1,
+        'homesteadBlock': 0,
+        'byzantiumBlock': 0,
+        'constantinopleBlock': 0,
         'chainId': node_options['networkid'],
-        'eip150Block': 1,
+        'eip150Block': 0,
         'eip155Block': 0,
         'eip150Hash': '0x0000000000000000000000000000000000000000000000000000000000000000',
-        'eip158Block': 1,
+        'eip158Block': 0,
         'isQuorum': True
     },
     'difficulty': '0x0',
@@ -60,12 +62,14 @@ genesis_params = {
 genesis_params_ibft = {
     'coinbase': '0x0000000000000000000000000000000000000000',
     'config': {
-        'byzantiumBlock': 1,
+        'homesteadBlock': 0,
+        'byzantiumBlock': 0,
+        'constantinopleBlock': 0,
         'chainId': node_options['networkid'],
-        'eip150Block': 2,
+        'eip150Block': 0,
         'eip155Block': 0,
         'eip150Hash': '0x0000000000000000000000000000000000000000000000000000000000000000',
-        'eip158Block': 3,
+        'eip158Block': 0,
         'isQuorum': True,
         'istanbul': {
             'epoch': 30000,
