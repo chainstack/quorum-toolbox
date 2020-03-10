@@ -1,7 +1,5 @@
 FROM chainstack/orch-runtime-docker:latest
 
-# Version 10 Dec 2019
-
 COPY . /app
 
 WORKDIR /app
