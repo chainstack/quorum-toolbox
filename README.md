@@ -7,7 +7,7 @@
 
 * Python ^3.4
 * [constellation v0.3.2](https://github.com/jpmorganchase/constellation) (`constellation-node`)
-* [quorum v2.5.0](https://github.com/jpmorganchase/quorum) (`geth`, `bootnode`)
+* [quorum v2.6.0](https://github.com/jpmorganchase/quorum) (`geth`, `bootnode`)
 * [istanbul-tools v1.0.1](https://github.com/jpmorganchase/istanbul-tools) (`istanbul`)
 
 ## Installation

@@ -43,12 +43,20 @@ genesis_params = {
         'homesteadBlock': 0,
         'byzantiumBlock': 0,
         'constantinopleBlock': 0,
+        'petersburgBlock': 0,
+        'istanbulBlock': 0,
         'chainId': node_options['networkid'],
         'eip150Block': 0,
         'eip155Block': 0,
         'eip150Hash': '0x0000000000000000000000000000000000000000000000000000000000000000',
         'eip158Block': 0,
-        'isQuorum': True
+        'isQuorum': True,
+        'maxCodeSizeConfig': [
+            {
+                'block': 0,
+                'size': 32
+            }
+        ]
     },
     'difficulty': '0x0',
     'extraData': '0x0000000000000000000000000000000000000000000000000000000000000000',
@@ -65,19 +73,28 @@ genesis_params_ibft = {
         'homesteadBlock': 0,
         'byzantiumBlock': 0,
         'constantinopleBlock': 0,
+        'petersburgBlock': 0,
+        'istanbulBlock': 0,
         'chainId': node_options['networkid'],
         'eip150Block': 0,
-        'eip155Block': 0,
         'eip150Hash': '0x0000000000000000000000000000000000000000000000000000000000000000',
+        'eip155Block': 0,
         'eip158Block': 0,
         'isQuorum': True,
+        'maxCodeSizeConfig': [
+            {
+                'block': 0,
+                'size': 32
+            }
+        ],
         'istanbul': {
             'epoch': 30000,
-            'policy': 0
-        },
+            'policy': 0,
+            'ceil2Nby3Block': 0
+        }
     },
-    'difficulty': '0x1',
     'gasLimit': '0xE0000000',
+    'difficulty': '0x1',
     'mixhash': '0x63746963616c2062797a616e74696e65206661756c7420746f6c6572616e6365',
     'nonce': '0x0',
     'parentHash': '0x0000000000000000000000000000000000000000000000000000000000000000',
