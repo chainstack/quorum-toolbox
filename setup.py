@@ -10,7 +10,7 @@ def read(fname):
 
 
 setup(name='quorumtoolbox',
-      version='3.2.1',
+      version='3.2.2',
       description='Quorum Toolbox',
       long_description=read('README.md'),
       packages=find_packages(),
