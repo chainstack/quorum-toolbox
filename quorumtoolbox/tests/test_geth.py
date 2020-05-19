@@ -1,8 +1,10 @@
 import json
 import os
 import re
+from unittest import mock
 
 from quorumtoolbox.geth import Geth
+from quorumtoolbox.utils.bash_utils import generate_geth_account
 from quorumtoolbox.utils.node_utils import make_node_param
 
 
@@ -11,6 +13,27 @@ def check_ibft_address(ibft_address):
     output = regex.search(ibft_address)
     if not output:
         raise Exception('Improper ibft address {0}'.format(ibft_address))
+
+
+def check_geth_new_account():
+    result = mock.Mock()
+    result.stdout = ('\nYour new key was generated\n'
+                     '\nPublic address of the key:   0xaA1Fc2A219f74492d4ef10B1445c6cade3A896DC'
+                     '\nPath of the secret key file: /tmp/pytest-of-root/pytest-2/'
+                     'test_quorum_generate_node_para0/networks/nw-434-4563/ND-000/'
+                     'blockchain/qdata/dd/keystore/UTC--2020-05-19T06-21-28.'
+                     '681398400Z--aa1fc2a219f74492d4ef10b1445c6cade3a896dc\n\n- '
+                     'You can share your public address with anyone. Others need'
+                     ' it to interact with you.\n- You must NEVER share the secret key '
+                     'with anyone! The key controls access to your funds!\n- '
+                     'You must BACKUP your key file! Without the key, it\'s impossible '
+                     'to access account funds!\n- You must REMEMBER your password! '
+                     'Without the password, it\'s impossible to decrypt the key!\n\n').encode()
+    result.stderr = b''
+    result.exit_code = 0
+
+    with mock.patch('sh.Command.bake', return_value=mock.Mock(return_value=result)):
+        assert generate_geth_account(mock.Mock(), mock.Mock()) == 'aa1fc2a219f74492d4ef10b1445c6cade3a896dc'
 
 
 def check_accounts(geth_i, no_of_accounts):
@@ -50,6 +73,9 @@ def check_accounts(geth_i, no_of_accounts):
 
 # ---------------------- Test: Non defaults
 print('==== START GETH TEST ====')
+
+print('Testing geth new account cmd...')
+check_geth_new_account()
 
 test_param = {
     'context': 'company1_q2_n0',

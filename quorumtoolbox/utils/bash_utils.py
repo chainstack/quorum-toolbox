@@ -129,20 +129,20 @@ def generate_geth_account(store_dir, passwords_file):
 
     :param: store_dir: location where keystore directory will be created (if not already present). Account related
     file will be placed within keystore. Each account is identified by a single file.
-    :return: Three parameters: Bash Exit Code, STDOUT (this will be the generated account's address on success), STDERR
-    Exit code 0 is success.
+    :param: passwords_file: file with password for the generated account
+    :return: generated account
     """
 
     cmd = sh.Command('geth').bake('--password', passwords_file, 'account', 'new', datadir=store_dir)
     result = run_cmd(cmd)
-
     # Extract the address from stdout
-    # e.g: 'Address: {4ce81fd2e8130716cad503f05bad7eb00d7f0c56}'
+    # e.g: 'Public address of the key:   0xaA1Fc2A219f74492d4ef10B1445c6cade3A896DC'
     stdout = result['stdout']
-    r = re.compile(r'Address: {([0-9A-Za-z]+)}')
+    r = re.compile(r'Public address of the key:\s+([0-9A-Za-z]+)')
     o = r.search(stdout)
 
-    return o.group(1)
+    # 0xaA1Fc2A219f74492d4ef10B1445c6cade3A896DC -> aa1fc2a219f74492d4ef10b1445c6cade3a896dc
+    return o.group(1).lower().replace('0x', '', 1)
 
 
 def make_quorum_node_launch_params(list_of_kv):
