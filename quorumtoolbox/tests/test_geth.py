@@ -33,7 +33,7 @@ def check_geth_new_account():
     result.exit_code = 0
 
     with mock.patch('sh.Command.bake', return_value=mock.Mock(return_value=result)):
-        assert generate_geth_account(mock.Mock(), mock.Mock()) == 'aa1fc2a219f74492d4ef10b1445c6cade3a896dc'
+        assert generate_geth_account(mock.Mock(), mock.Mock()) == 'aA1Fc2A219f74492d4ef10B1445c6cade3A896DC'
 
 
 def check_accounts(geth_i, no_of_accounts):
@@ -49,7 +49,7 @@ def check_accounts(geth_i, no_of_accounts):
             with open(os.path.join(root, filename), 'r') as fp:
                 try:
                     account_json = json.loads(fp.read())
-                    if account_json['address'] == geth_i.accounts[0]:
+                    if account_json['address'] == geth_i.accounts[0].lower():
                         found += 1
                 except Exception:
                     continue
