@@ -141,8 +141,8 @@ def generate_geth_account(store_dir, passwords_file):
     r = re.compile(r'Public address of the key:\s+([0-9A-Za-z]+)')
     o = r.search(stdout)
 
-    # 0xaA1Fc2A219f74492d4ef10B1445c6cade3A896DC -> aa1fc2a219f74492d4ef10b1445c6cade3a896dc
-    return o.group(1).lower().replace('0x', '', 1)
+    # 0xaA1Fc2A219f74492d4ef10B1445c6cade3A896DC -> aA1Fc2A219f74492d4ef10B1445c6cade3A896DC
+    return o.group(1).replace('0x', '', 1)
 
 
 def make_quorum_node_launch_params(list_of_kv):
